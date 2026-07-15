@@ -12,9 +12,9 @@ try {
 // ---- CONFIG ----
 const SENHA = 'prosecurity';           // senha interna (troque aqui; proteja com Cloudflare Access em producao)
 const EMPRESAS = {
-  'PRO CLEAN':     { base: 'base_clean.pdf',     coords: 'clean',     razao: 'PRO CLEAN HIGIENIZACAO E LIMPEZA LTDA',       cnpj: '16.626.344/0001-40', cargoPadrao: 'AUXILIAR DE LIMPEZA', icon: 'CL' },
-  'PRO SERVICOS':  { base: 'base_porteiro.pdf',  coords: 'porteiro',  razao: 'PRO SECURITY SERVICOS ESPECIALIZADOS LTDA',   cnpj: '56.566.292/0001-89', cargoPadrao: 'PORTEIRO',           icon: 'SV' },
-  'PRO SEGURANCA': { base: 'base_vigilante.pdf', coords: 'vigilante', razao: 'PRO SECURITY SEGURANCA PATRIMONIAL LTDA',     cnpj: '96.231.568/0001-92', cargoPadrao: 'VIGILANTE',          icon: 'SG' },
+  'PRO CLEAN':     { base: 'base_clean.pdf',     coords: 'clean',     razao: 'PRO CLEAN HIGIENIZACAO E LIMPEZA LTDA',       cnpj: '16.626.344/0001-40', cargoPadrao: 'AUXILIAR DE LIMPEZA', icon: '🧹' },
+  'PRO SERVICOS':  { base: 'base_porteiro.pdf',  coords: 'porteiro',  razao: 'PRO SECURITY SERVICOS ESPECIALIZADOS LTDA',   cnpj: '56.566.292/0001-89', cargoPadrao: 'PORTEIRO',           icon: '🏢' },
+  'PRO SEGURANCA': { base: 'base_vigilante.pdf', coords: 'vigilante', razao: 'PRO SECURITY SEGURANCA PATRIMONIAL LTDA',     cnpj: '96.231.568/0001-92', cargoPadrao: 'VIGILANTE',          icon: '🛡️' },
 };
 const DEFAULT_CARGOS = {
   'PRO CLEAN':     [{ cargo: 'AUXILIAR DE LIMPEZA', salario: 'R$ 1.837,40' }],
@@ -31,7 +31,38 @@ let cartaEmpresa = null, oncareEmpresa = null, passTipo = 'BASE';
 const $ = (id) => document.getElementById(id);
 const upper = (s) => (s || '').trim().toUpperCase();
 function fmtData(v) { if (!v) return ''; const [y, m, d] = v.split('-'); return `${d}/${m}/${y}`; }
-function getCargos() { try { return JSON.parse(localStorage.getItem('hub_rs_cargos')) || structuredClone(DEFAULT_CARGOS); } catch { return structuredClone(DEFAULT_CARGOS); } }
+function cloneDefaultCargos() { return JSON.parse(JSON.stringify(DEFAULT_CARGOS)); }
+function normalizarEmpresa(nome) {
+  const raw = (nome || '').toUpperCase();
+  if (raw.includes('CLEAN')) return 'PRO CLEAN';
+  if (raw.includes('SERV')) return 'PRO SERVICOS';
+  if (raw.includes('SEGUR')) return 'PRO SEGURANCA';
+  return nome;
+}
+function mesclarCargosSalvos(salvos) {
+  const todos = cloneDefaultCargos();
+  Object.entries(salvos || {}).forEach(([empresaOriginal, lista]) => {
+    const empresa = normalizarEmpresa(empresaOriginal);
+    if (!todos[empresa] || !Array.isArray(lista)) return;
+    lista.forEach((item) => {
+      const cargo = upper(item && item.cargo);
+      const salario = (item && item.salario || '').trim();
+      if (!cargo || !salario) return;
+      if (!todos[empresa].some((c) => c.cargo === cargo)) todos[empresa].push({ cargo, salario });
+    });
+  });
+  return todos;
+}
+function getCargos() {
+  try {
+    const salvos = JSON.parse(localStorage.getItem('hub_rs_cargos') || '{}');
+    const mesclados = mesclarCargosSalvos(salvos);
+    localStorage.setItem('hub_rs_cargos', JSON.stringify(mesclados));
+    return mesclados;
+  } catch {
+    return cloneDefaultCargos();
+  }
+}
 function setCargos(c) { localStorage.setItem('hub_rs_cargos', JSON.stringify(c)); }
 
 async function fetchFirst(paths) {
@@ -219,6 +250,9 @@ const App = {
     toast(`Cargo "${cargo}" cadastrado em ${empresa}.`, 'success');
   },
   removerCargo(empresa, cargo) {
+    if ((DEFAULT_CARGOS[empresa] || []).some((c) => c.cargo === cargo)) {
+      return toast('Cargo padrao nao pode ser removido.', 'info');
+    }
     const all = getCargos(); all[empresa] = (all[empresa] || []).filter((c) => c.cargo !== cargo); setCargos(all);
     this.renderConfig(); if (cartaEmpresa === empresa) this.preencherCargos(empresa);
     toast('Cargo removido.', 'info');
@@ -227,7 +261,7 @@ const App = {
     const all = getCargos();
     $('cfgCargos').innerHTML = Object.keys(EMPRESAS).map((emp) => {
       const itens = (all[emp] || []).map((c) =>
-        `<div class="cargo-item"><span><span class="ci-cargo">${c.cargo}</span> &nbsp; <span class="ci-sal">${c.salario}</span></span><button onclick="App.removerCargo('${emp.replace(/'/g, "\\'")}','${c.cargo.replace(/'/g, "\\'")}')">remover</button></div>`
+        `<div class="cargo-item"><span><span class="ci-cargo">${c.cargo}</span> &nbsp; <span class="ci-sal">${c.salario}</span></span>${(DEFAULT_CARGOS[emp] || []).some((p) => p.cargo === c.cargo) ? '<span class="ci-fixed">padrao</span>' : `<button onclick="App.removerCargo('${emp.replace(/'/g, "\\'")}','${c.cargo.replace(/'/g, "\\'")}')">remover</button>`}</div>`
       ).join('') || '<p class="field-hint">Nenhum cargo cadastrado.</p>';
       return `<div class="empresa-block"><h4>${emp}</h4><div class="cargo-list">${itens}</div></div>`;
     }).join('');
