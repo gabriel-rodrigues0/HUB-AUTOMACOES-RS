@@ -108,6 +108,11 @@ function toast(msg, tipo = 'info') {
 function mascaraCPF(i) { let v = i.value.replace(/\D/g, '').slice(0, 11); if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4'); else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3'); else if (v.length > 3) v = v.replace(/(\d{3})(\d{1,3})/, '$1.$2'); i.value = v; }
 function mascaraCEP(i) { let v = i.value.replace(/\D/g, '').slice(0, 8); if (v.length > 5) v = v.replace(/(\d{5})(\d{1,3})/, '$1-$2'); i.value = v; }
 function mascaraTel(i) { let v = i.value.replace(/\D/g, '').slice(0, 11); if (v.length > 10) v = v.replace(/(\d{2})(\d{5})(\d{1,4})/, '($1) $2-$3'); else if (v.length > 6) v = v.replace(/(\d{2})(\d{4})(\d{1,4})/, '($1) $2-$3'); else if (v.length > 2) v = v.replace(/(\d{2})(\d{1,5})/, '($1) $2'); else if (v.length) v = v.replace(/(\d{1,2})/, '($1'); i.value = v; }
+function mascaraMoedaBRL(i) {
+  const centavos = i.value.replace(/\D/g, '').replace(/^0+/, '') || '0';
+  const valor = Number(centavos) / 100;
+  i.value = valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
 
 // ---- VALIDACAO ----
 function limparErro(el) { el.classList.remove('error'); const e = $('err-' + el.id); if (e) e.classList.remove('show'); }
@@ -338,6 +343,7 @@ async function init() {
   const mask = (id, fn) => { const el = $(id); el.addEventListener('input', () => { fn(el); limparErro(el); }); };
   mask('c_cpf', mascaraCPF); mask('c_cep', mascaraCEP);
   mask('o_cpf', mascaraCPF); mask('o_tel', mascaraTel);
+  mask('m_salario', mascaraMoedaBRL);
   ['c_nome', 'c_endereco', 'c_rg', 'c_data', 'o_local', 'o_unidade', 'o_data', 'o_cargo', 'o_nome', 'o_rg', 'o_nasc', 'p_nome', 'p_data', 'p_escala', 'p_htrab', 'p_endereco', 'p_hapres']
     .forEach((id) => $(id).addEventListener('input', () => limparErro($(id))));
 

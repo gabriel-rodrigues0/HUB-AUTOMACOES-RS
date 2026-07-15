@@ -260,7 +260,7 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
     <div class="modal-body">
       <div class="field"><label for="m_empresa">Empresa</label><select id="m_empresa"></select></div>
       <div class="field"><label for="m_cargo">Cargo</label><input type="text" id="m_cargo" placeholder="RECEPCIONISTA" autocomplete="off"/></div>
-      <div class="field"><label for="m_salario">Salário</label><input type="text" id="m_salario" placeholder="R$ 0,00" autocomplete="off"/></div>
+      <div class="field"><label for="m_salario">Salário</label><input type="text" id="m_salario" placeholder="R$ 0,00" inputmode="numeric" autocomplete="off"/></div>
     </div>
     <div class="modal-foot">
       <button class="btn-secondary" onclick="App.fecharCargoModal()">Cancelar</button>
