@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Pro Security · Hub de Automações R&S</title>
+<title>Pro Security | Hub de Automacoes R&S</title>
 <meta name="robots" content="noindex,nofollow"/>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23c0392b'/%3E%3Ctext x='32' y='45' font-family='monospace' font-size='32' font-weight='700' text-anchor='middle' fill='white'%3EPS%3C/text%3E%3C/svg%3E"/>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet"/>
@@ -15,7 +15,7 @@
 <div class="gate" id="gate">
   <div class="gate-box">
     <div class="logo-badge">PS</div>
-    <h2>Hub de Automações R&amp;S</h2>
+    <h2>Hub Pro Security</h2>
     <p>Acesso restrito ao time de Recrutamento &amp; Seleção.</p>
     <input type="password" id="gatePass" placeholder="Senha interna" autocomplete="off"/>
     <button class="btn-primary" style="width:100%" onclick="entrarGate()"><span class="btn-text">Entrar</span></button>
@@ -63,41 +63,41 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
   <div class="logo-badge">PS</div>
   <div class="header-info">
     <div class="header-title">Pro Security</div>
-    <div class="header-sub">Hub de Automações · R&amp;S</div>
+    <div class="header-sub">Hub de Automacoes · R&amp;S</div>
   </div>
   <div class="header-badge">Uso Interno</div>
 </header>
 
 <nav class="tabs">
-  <button class="tab active" data-tab="inicio" onclick="abrirTela('inicio')">🏠 Início</button>
-  <button class="tab" data-tab="rs" onclick="abrirTela('rs')">📋 R&amp;S</button>
-  <button class="tab" data-tab="config" onclick="abrirTela('config')">⚙️ Configurações</button>
+  <button class="tab active" data-tab="inicio" onclick="abrirTela('inicio')">ðŸ  InÃ­cio</button>
+  <button class="tab" data-tab="rs" onclick="abrirTela('rs')">ðŸ“‹ R&amp;S</button>
+  <button class="tab" data-tab="config" onclick="abrirTela('config')">âš™ï¸ ConfiguraÃ§Ãµes</button>
 </nav>
 
 <main>
-  <!-- ===== INÍCIO ===== -->
+  <!-- ===== INÃCIO ===== -->
   <section class="view" id="view-inicio">
     <div class="page-header">
-      <h1 class="page-title">Bem-vindo ao Hub de Automações</h1>
-      <p class="page-desc">Selecione uma área para começar.</p>
+      <h1 class="page-title">Hub de Automacoes Pro Security</h1>
+      <p class="page-desc">Ferramentas internas de R&amp;S com o padrao visual institucional.</p>
     </div>
     <div class="cards">
       <button class="app-card" onclick="abrirTela('rs')">
-        <span class="app-card-icon">📋</span>
-        <div class="app-card-title">Recrutamento &amp; Seleção</div>
-        <div class="app-card-desc">Cartas bancárias, Guia OnCare e Passaporte de boas-vindas.</div>
-        <span class="app-card-tag">3 automações</span>
+        <span class="app-card-icon">ðŸ“‹</span>
+        <div class="app-card-title">Recrutamento &amp; SeleÃ§Ã£o</div>
+        <div class="app-card-desc">Cartas bancÃ¡rias, Guia OnCare e Passaporte de boas-vindas.</div>
+        <span class="app-card-tag">3 automaÃ§Ãµes</span>
       </button>
       <button class="app-card" disabled>
-        <span class="app-card-icon">🧩</span>
-        <div class="app-card-title">Futuras automações</div>
-        <div class="app-card-desc">Espaço reservado para novos módulos.</div>
+        <span class="app-card-icon">ðŸ§©</span>
+        <div class="app-card-title">Futuras automaÃ§Ãµes</div>
+        <div class="app-card-desc">EspaÃ§o reservado para novos mÃ³dulos.</div>
         <span class="app-card-tag" style="color:var(--mut);background:#eef2f7">Em breve</span>
       </button>
       <button class="app-card" onclick="abrirTela('config')">
-        <span class="app-card-icon">⚙️</span>
-        <div class="app-card-title">Configurações</div>
-        <div class="app-card-desc">Cargos e salários por empresa.</div>
+        <span class="app-card-icon">âš™ï¸</span>
+        <div class="app-card-title">ConfiguraÃ§Ãµes</div>
+        <div class="app-card-desc">Cargos e salÃ¡rios por empresa.</div>
       </button>
     </div>
   </section>
@@ -105,22 +105,22 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
   <!-- ===== R&S (menu) ===== -->
   <section class="view hidden" id="view-rs">
     <div class="page-header">
-      <h1 class="page-title">Recrutamento &amp; Seleção</h1>
-      <p class="page-desc">Escolha a automação desejada.</p>
+      <h1 class="page-title">Recrutamento &amp; SeleÃ§Ã£o</h1>
+      <p class="page-desc">Escolha a automaÃ§Ã£o desejada.</p>
     </div>
     <div class="cards">
       <button class="app-card" onclick="abrirFerramenta('carta')">
-        <span class="app-card-icon">🏦</span>
-        <div class="app-card-title">Cartas Bancárias</div>
+        <span class="app-card-icon">ðŸ¦</span>
+        <div class="app-card-title">Cartas BancÃ¡rias</div>
         <div class="app-card-desc">Abertura de conta a partir do modelo oficial (DOCX).</div>
       </button>
       <button class="app-card" onclick="abrirFerramenta('oncare')">
-        <span class="app-card-icon">🩺</span>
+        <span class="app-card-icon">ðŸ©º</span>
         <div class="app-card-title">Guia OnCare</div>
-        <div class="app-card-desc">Solicitação de agendamento de exame (XLSX).</div>
+        <div class="app-card-desc">SolicitaÃ§Ã£o de agendamento de exame (XLSX).</div>
       </button>
       <button class="app-card" onclick="abrirFerramenta('passaporte')">
-        <span class="app-card-icon">🎫</span>
+        <span class="app-card-icon">ðŸŽ«</span>
         <div class="app-card-title">Passaporte</div>
         <div class="app-card-desc">Carta de boas-vindas ao novo colaborador.</div>
       </button>
@@ -129,17 +129,17 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
 
   <!-- ===== CARTA ===== -->
   <section class="view hidden" id="view-carta">
-    <button class="back-link" onclick="abrirTela('rs')">← Voltar para R&amp;S</button>
-    <div class="page-header"><h1 class="page-title">Gerador de Cartas Bancárias</h1><p class="page-desc">Preencha os dados e baixe o PDF oficial.</p></div>
+    <button class="back-link" onclick="abrirTela('rs')">â† Voltar para R&amp;S</button>
+    <div class="page-header"><h1 class="page-title">Gerador de Cartas BancÃ¡rias</h1><p class="page-desc">Preencha os dados e baixe o PDF oficial.</p></div>
     <div class="card">
       <div class="card-section">
         <div class="section-label"><div class="section-label-num">1</div><div class="section-label-text">Empresa</div></div>
         <div class="choice-grid" id="cartaEmpresas"></div>
         <div class="info-preview" id="cartaInfo">
           <div class="info-preview-grid">
-            <div><div class="info-item-label">CNPJ</div><div class="info-item-value" id="cartaCnpj">—</div></div>
-            <div><div class="info-item-label">Cargo padrão</div><div class="info-item-value" id="cartaCargoPad">—</div></div>
-            <div style="grid-column:1/-1"><div class="info-item-label">Razão Social</div><div class="info-item-value" id="cartaRazao">—</div></div>
+            <div><div class="info-item-label">CNPJ</div><div class="info-item-value" id="cartaCnpj">â€”</div></div>
+            <div><div class="info-item-label">Cargo padrÃ£o</div><div class="info-item-value" id="cartaCargoPad">â€”</div></div>
+            <div style="grid-column:1/-1"><div class="info-item-label">RazÃ£o Social</div><div class="info-item-value" id="cartaRazao">â€”</div></div>
           </div>
         </div>
       </div>
@@ -152,31 +152,31 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
               <select id="c_cargo" onchange="App.onCargoChange()"></select>
               <button class="btn-add" type="button" title="Cadastrar novo cargo" onclick="App.abrirCargoModal()">+</button>
             </div>
-            <span class="field-hint">O salário é preenchido automaticamente.</span>
+            <span class="field-hint">O salÃ¡rio Ã© preenchido automaticamente.</span>
           </div>
-          <div class="field"><label>Salário</label><input type="text" id="c_salario" readonly/></div>
+          <div class="field"><label>SalÃ¡rio</label><input type="text" id="c_salario" readonly/></div>
           <div class="field"><label for="c_data">Data da carta<span class="req">*</span></label>
             <div class="date-row"><input type="date" id="c_data"/><button type="button" class="date-today-btn" onclick="App.hoje('c_data')">Hoje</button></div>
           </div>
-          <div class="field full-width"><label for="c_nome">Nome completo<span class="req">*</span></label><input type="text" id="c_nome" placeholder="JOÃO DA SILVA SANTOS" autocomplete="off"/><span class="field-error" id="err-c_nome">Campo obrigatório.</span></div>
-          <div class="field full-width"><label for="c_endereco">Endereço<span class="req">*</span></label><input type="text" id="c_endereco" placeholder="RUA DAS FLORES, 123 - JARDIM PAULISTA" autocomplete="off"/><span class="field-error" id="err-c_endereco">Campo obrigatório.</span></div>
-          <div class="field"><label for="c_cep">CEP<span class="req">*</span></label><input type="text" id="c_cep" placeholder="00000-000" maxlength="9" autocomplete="off"/><span class="field-error" id="err-c_cep">CEP inválido.</span></div>
-          <div class="field"><label for="c_cidade">Cidade</label><input type="text" id="c_cidade" value="SÃO PAULO - SP" readonly/><span class="field-hint">Fixo no modelo oficial.</span></div>
-          <div class="field"><label for="c_rg">RG<span class="req">*</span></label><input type="text" id="c_rg" placeholder="12.345.678-9" autocomplete="off"/><span class="field-error" id="err-c_rg">Campo obrigatório.</span></div>
-          <div class="field"><label for="c_cpf">CPF<span class="req">*</span></label><input type="text" id="c_cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="off"/><span class="field-error" id="err-c_cpf">CPF inválido.</span></div>
+          <div class="field full-width"><label for="c_nome">Nome completo<span class="req">*</span></label><input type="text" id="c_nome" placeholder="JOÃƒO DA SILVA SANTOS" autocomplete="off"/><span class="field-error" id="err-c_nome">Campo obrigatÃ³rio.</span></div>
+          <div class="field full-width"><label for="c_endereco">EndereÃ§o<span class="req">*</span></label><input type="text" id="c_endereco" placeholder="RUA DAS FLORES, 123 - JARDIM PAULISTA" autocomplete="off"/><span class="field-error" id="err-c_endereco">Campo obrigatÃ³rio.</span></div>
+          <div class="field"><label for="c_cep">CEP<span class="req">*</span></label><input type="text" id="c_cep" placeholder="00000-000" maxlength="9" autocomplete="off"/><span class="field-error" id="err-c_cep">CEP invÃ¡lido.</span></div>
+          <div class="field"><label for="c_cidade">Cidade</label><input type="text" id="c_cidade" value="SÃƒO PAULO - SP" readonly/><span class="field-hint">Fixo no modelo oficial.</span></div>
+          <div class="field"><label for="c_rg">RG<span class="req">*</span></label><input type="text" id="c_rg" placeholder="12.345.678-9" autocomplete="off"/><span class="field-error" id="err-c_rg">Campo obrigatÃ³rio.</span></div>
+          <div class="field"><label for="c_cpf">CPF<span class="req">*</span></label><input type="text" id="c_cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="off"/><span class="field-error" id="err-c_cpf">CPF invÃ¡lido.</span></div>
         </div>
       </div>
       <div class="actions-section">
-        <button class="btn-primary" id="c_btn" onclick="App.gerarCarta()"><span class="btn-text">⬇ Gerar PDF</span><div class="btn-spinner"></div></button>
-        <button class="btn-secondary" onclick="App.limpar('carta')">↺ Limpar</button>
+        <button class="btn-primary" id="c_btn" onclick="App.gerarCarta()"><span class="btn-text">â¬‡ Gerar PDF</span><div class="btn-spinner"></div></button>
+        <button class="btn-secondary" onclick="App.limpar('carta')">â†º Limpar</button>
       </div>
     </div>
   </section>
 
   <!-- ===== ONCARE ===== -->
   <section class="view hidden" id="view-oncare">
-    <button class="back-link" onclick="abrirTela('rs')">← Voltar para R&amp;S</button>
-    <div class="page-header"><h1 class="page-title">Gerador de Guia OnCare</h1><p class="page-desc">Solicitação de agendamento de exame admissional.</p></div>
+    <button class="back-link" onclick="abrirTela('rs')">â† Voltar para R&amp;S</button>
+    <div class="page-header"><h1 class="page-title">Gerador de Guia OnCare</h1><p class="page-desc">SolicitaÃ§Ã£o de agendamento de exame admissional.</p></div>
     <div class="card">
       <div class="card-section">
         <div class="section-label"><div class="section-label-num">1</div><div class="section-label-text">Empresa</div></div>
@@ -185,63 +185,63 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
       <div class="card-section">
         <div class="section-label"><div class="section-label-num">2</div><div class="section-label-text">Dados do Agendamento</div></div>
         <div class="form-grid">
-          <div class="field"><label for="o_local">Local de agendamento<span class="req">*</span></label><input type="text" id="o_local" placeholder="SANTO AMARO" autocomplete="off"/><span class="field-error" id="err-o_local">Campo obrigatório.</span></div>
-          <div class="field"><label for="o_unidade">Unidade / Posto<span class="req">*</span></label><input type="text" id="o_unidade" placeholder="DOMANI BROOKLIN" autocomplete="off"/><span class="field-error" id="err-o_unidade">Campo obrigatório.</span></div>
+          <div class="field"><label for="o_local">Local de agendamento<span class="req">*</span></label><input type="text" id="o_local" placeholder="SANTO AMARO" autocomplete="off"/><span class="field-error" id="err-o_local">Campo obrigatÃ³rio.</span></div>
+          <div class="field"><label for="o_unidade">Unidade / Posto<span class="req">*</span></label><input type="text" id="o_unidade" placeholder="DOMANI BROOKLIN" autocomplete="off"/><span class="field-error" id="err-o_unidade">Campo obrigatÃ³rio.</span></div>
           <div class="field"><label for="o_data">Data do exame<span class="req">*</span></label><div class="date-row"><input type="date" id="o_data"/><button type="button" class="date-today-btn" onclick="App.hoje('o_data')">Hoje</button></div></div>
-          <div class="field"><label for="o_cargo">Cargo<span class="req">*</span></label><input type="text" id="o_cargo" placeholder="PORTEIRO" autocomplete="off"/><span class="field-error" id="err-o_cargo">Campo obrigatório.</span></div>
-          <div class="field full-width"><label for="o_nome">Nome completo<span class="req">*</span></label><input type="text" id="o_nome" placeholder="JOÃO DA SILVA SANTOS" autocomplete="off"/><span class="field-error" id="err-o_nome">Campo obrigatório.</span></div>
-          <div class="field"><label for="o_rg">RG<span class="req">*</span></label><input type="text" id="o_rg" placeholder="12.345.678-9" autocomplete="off"/><span class="field-error" id="err-o_rg">Campo obrigatório.</span></div>
-          <div class="field"><label for="o_cpf">CPF<span class="req">*</span></label><input type="text" id="o_cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="off"/><span class="field-error" id="err-o_cpf">CPF inválido.</span></div>
-          <div class="field"><label for="o_tel">Telefone<span class="req">*</span></label><input type="text" id="o_tel" placeholder="(11) 90000-0000" maxlength="15" autocomplete="off"/><span class="field-error" id="err-o_tel">Campo obrigatório.</span></div>
-          <div class="field"><label for="o_nasc">Data de nascimento<span class="req">*</span></label><input type="date" id="o_nasc"/><span class="field-error" id="err-o_nasc">Campo obrigatório.</span></div>
+          <div class="field"><label for="o_cargo">Cargo<span class="req">*</span></label><input type="text" id="o_cargo" placeholder="PORTEIRO" autocomplete="off"/><span class="field-error" id="err-o_cargo">Campo obrigatÃ³rio.</span></div>
+          <div class="field full-width"><label for="o_nome">Nome completo<span class="req">*</span></label><input type="text" id="o_nome" placeholder="JOÃƒO DA SILVA SANTOS" autocomplete="off"/><span class="field-error" id="err-o_nome">Campo obrigatÃ³rio.</span></div>
+          <div class="field"><label for="o_rg">RG<span class="req">*</span></label><input type="text" id="o_rg" placeholder="12.345.678-9" autocomplete="off"/><span class="field-error" id="err-o_rg">Campo obrigatÃ³rio.</span></div>
+          <div class="field"><label for="o_cpf">CPF<span class="req">*</span></label><input type="text" id="o_cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="off"/><span class="field-error" id="err-o_cpf">CPF invÃ¡lido.</span></div>
+          <div class="field"><label for="o_tel">Telefone<span class="req">*</span></label><input type="text" id="o_tel" placeholder="(11) 90000-0000" maxlength="15" autocomplete="off"/><span class="field-error" id="err-o_tel">Campo obrigatÃ³rio.</span></div>
+          <div class="field"><label for="o_nasc">Data de nascimento<span class="req">*</span></label><input type="date" id="o_nasc"/><span class="field-error" id="err-o_nasc">Campo obrigatÃ³rio.</span></div>
         </div>
       </div>
       <div class="actions-section">
-        <button class="btn-primary" id="o_btn" onclick="App.gerarOncare()"><span class="btn-text">⬇ Gerar PDF</span><div class="btn-spinner"></div></button>
-        <button class="btn-secondary" onclick="App.limpar('oncare')">↺ Limpar</button>
+        <button class="btn-primary" id="o_btn" onclick="App.gerarOncare()"><span class="btn-text">â¬‡ Gerar PDF</span><div class="btn-spinner"></div></button>
+        <button class="btn-secondary" onclick="App.limpar('oncare')">â†º Limpar</button>
       </div>
     </div>
   </section>
 
   <!-- ===== PASSAPORTE ===== -->
   <section class="view hidden" id="view-passaporte">
-    <button class="back-link" onclick="abrirTela('rs')">← Voltar para R&amp;S</button>
+    <button class="back-link" onclick="abrirTela('rs')">â† Voltar para R&amp;S</button>
     <div class="page-header"><h1 class="page-title">Gerador de Passaporte</h1><p class="page-desc">Carta de boas-vindas com data, local e escala.</p></div>
     <div class="card">
       <div class="card-section">
-        <div class="section-label"><div class="section-label-num">1</div><div class="section-label-text">Apresentação</div></div>
+        <div class="section-label"><div class="section-label-num">1</div><div class="section-label-text">ApresentaÃ§Ã£o</div></div>
         <div class="choice-grid cols-2" id="passTipos"></div>
       </div>
       <div class="card-section">
         <div class="section-label"><div class="section-label-num">2</div><div class="section-label-text">Dados</div></div>
         <div class="form-grid">
           <div class="field"><label for="p_trat">Tratamento</label><select id="p_trat"><option>Sr.</option><option>Sra.</option></select></div>
-          <div class="field"><label for="p_data">Data de início<span class="req">*</span></label><div class="date-row"><input type="date" id="p_data"/><button type="button" class="date-today-btn" onclick="App.hoje('p_data')">Hoje</button></div></div>
-          <div class="field full-width"><label for="p_nome">Nome completo<span class="req">*</span></label><input type="text" id="p_nome" placeholder="JOÃO DA SILVA" autocomplete="off"/><span class="field-error" id="err-p_nome">Campo obrigatório.</span></div>
-          <div class="field full-width"><label for="p_endereco">Endereço de apresentação<span class="req">*</span></label><input type="text" id="p_endereco" autocomplete="off"/><span class="field-hint" id="p_endHint"></span><span class="field-error" id="err-p_endereco">Campo obrigatório.</span></div>
-          <div class="field"><label for="p_hapres">Horário de apresentação<span class="req">*</span></label><input type="text" id="p_hapres" placeholder="07:00" autocomplete="off"/><span class="field-error" id="err-p_hapres">Campo obrigatório.</span></div>
-          <div class="field"><label for="p_escala">Escala<span class="req">*</span></label><select id="p_escala"><option value="">Selecione…</option><option>12X36</option><option>6X1</option><option>5X2</option><option>5X1</option><option>4X2</option><option>4X1</option></select><span class="field-error" id="err-p_escala">Selecione a escala.</span></div>
-          <div class="field full-width"><label for="p_htrab">Horário de trabalho<span class="req">*</span></label><input type="text" id="p_htrab" placeholder="07:00 ÀS 15:20" autocomplete="off"/><span class="field-error" id="err-p_htrab">Campo obrigatório.</span></div>
+          <div class="field"><label for="p_data">Data de inÃ­cio<span class="req">*</span></label><div class="date-row"><input type="date" id="p_data"/><button type="button" class="date-today-btn" onclick="App.hoje('p_data')">Hoje</button></div></div>
+          <div class="field full-width"><label for="p_nome">Nome completo<span class="req">*</span></label><input type="text" id="p_nome" placeholder="JOÃƒO DA SILVA" autocomplete="off"/><span class="field-error" id="err-p_nome">Campo obrigatÃ³rio.</span></div>
+          <div class="field full-width"><label for="p_endereco">EndereÃ§o de apresentaÃ§Ã£o<span class="req">*</span></label><input type="text" id="p_endereco" autocomplete="off"/><span class="field-hint" id="p_endHint"></span><span class="field-error" id="err-p_endereco">Campo obrigatÃ³rio.</span></div>
+          <div class="field"><label for="p_hapres">HorÃ¡rio de apresentaÃ§Ã£o<span class="req">*</span></label><input type="text" id="p_hapres" placeholder="07:00" autocomplete="off"/><span class="field-error" id="err-p_hapres">Campo obrigatÃ³rio.</span></div>
+          <div class="field"><label for="p_escala">Escala<span class="req">*</span></label><select id="p_escala"><option value="">Selecioneâ€¦</option><option>12X36</option><option>6X1</option><option>5X2</option><option>5X1</option><option>4X2</option><option>4X1</option></select><span class="field-error" id="err-p_escala">Selecione a escala.</span></div>
+          <div class="field full-width"><label for="p_htrab">HorÃ¡rio de trabalho<span class="req">*</span></label><input type="text" id="p_htrab" placeholder="07:00 Ã€S 15:20" autocomplete="off"/><span class="field-error" id="err-p_htrab">Campo obrigatÃ³rio.</span></div>
         </div>
       </div>
       <div class="actions-section">
-        <button class="btn-primary" id="p_btn" onclick="App.gerarPassaporte()"><span class="btn-text">⬇ Gerar PDF</span><div class="btn-spinner"></div></button>
-        <button class="btn-secondary" onclick="App.limpar('passaporte')">↺ Limpar</button>
+        <button class="btn-primary" id="p_btn" onclick="App.gerarPassaporte()"><span class="btn-text">â¬‡ Gerar PDF</span><div class="btn-spinner"></div></button>
+        <button class="btn-secondary" onclick="App.limpar('passaporte')">â†º Limpar</button>
       </div>
     </div>
   </section>
 
-  <!-- ===== CONFIGURAÇÕES ===== -->
+  <!-- ===== CONFIGURAÃ‡Ã•ES ===== -->
   <section class="view hidden" id="view-config">
-    <div class="page-header"><h1 class="page-title">Configurações</h1><p class="page-desc">Cargos e salários por empresa (usados nas cartas).</p></div>
+    <div class="page-header"><h1 class="page-title">ConfiguraÃ§Ãµes</h1><p class="page-desc">Cargos e salÃ¡rios por empresa (usados nas cartas).</p></div>
     <div class="card">
       <div class="card-section">
         <div class="section-label"><div class="section-label-num">1</div><div class="section-label-text">Cadastro de Cargos</div></div>
         <div id="cfgCargos"></div>
         <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
           <button class="btn-secondary" onclick="App.abrirCargoModal()">+ Novo cargo</button>
-          <button class="btn-secondary" onclick="App.exportarCargos()">⬇ Exportar (backup)</button>
-          <button class="btn-secondary" onclick="document.getElementById('impCargos').click()">⬆ Importar</button>
+          <button class="btn-secondary" onclick="App.exportarCargos()">â¬‡ Exportar (backup)</button>
+          <button class="btn-secondary" onclick="document.getElementById('impCargos').click()">â¬† Importar</button>
           <input type="file" id="impCargos" accept="application/json" class="hidden" onchange="App.importarCargos(event)"/>
         </div>
         <p class="field-hint" style="margin-top:12px">Os cargos ficam salvos neste navegador. Use Exportar/Importar para compartilhar com a equipe.</p>
@@ -257,7 +257,7 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
     <div class="modal-body">
       <div class="field"><label for="m_empresa">Empresa</label><select id="m_empresa"></select></div>
       <div class="field"><label for="m_cargo">Cargo</label><input type="text" id="m_cargo" placeholder="RECEPCIONISTA" autocomplete="off"/></div>
-      <div class="field"><label for="m_salario">Salário</label><input type="text" id="m_salario" placeholder="R$ 0,00" autocomplete="off"/></div>
+      <div class="field"><label for="m_salario">SalÃ¡rio</label><input type="text" id="m_salario" placeholder="R$ 0,00" autocomplete="off"/></div>
     </div>
     <div class="modal-foot">
       <button class="btn-secondary" onclick="App.fecharCargoModal()">Cancelar</button>
@@ -267,8 +267,11 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
 </div>
 
 <div class="toast-container" id="toastContainer"></div>
-<footer>Pro Security · Uso exclusivo do time de R&amp;S · Documentos gerados localmente no navegador</footer>
+<footer>Pro Security Â· Uso exclusivo do time de R&amp;S Â· Documentos gerados localmente no navegador</footer>
 
 <script type="module" src="./app.js"></script>
 </body>
 </html>
+
+
+
