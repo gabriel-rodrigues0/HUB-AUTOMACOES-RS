@@ -150,10 +150,12 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
           <div class="field full-width">
             <label for="c_cargo">Cargo<span class="req">*</span></label>
             <div class="cargo-row">
-              <select id="c_cargo" onchange="App.onCargoChange()"></select>
-              <button class="btn-add" type="button" title="Cadastrar novo cargo" onclick="App.abrirCargoModal()">+</button>
+              <select id="c_cargo" onchange="App.onCargoChange()" disabled>
+                <option value="">Selecione a empresa primeiro</option>
+              </select>
+              <button class="btn-add" id="c_addCargo" type="button" title="Selecione uma empresa antes de cadastrar cargo" onclick="App.abrirCargoModal()" disabled>+</button>
             </div>
-            <span class="field-hint">O salário é preenchido automaticamente.</span>
+            <span class="field-hint" id="c_cargoHint">Selecione uma empresa para liberar os cargos.</span>
           </div>
           <div class="field"><label>Salário</label><input type="text" id="c_salario" readonly/></div>
           <div class="field"><label for="c_data">Data da carta<span class="req">*</span></label>

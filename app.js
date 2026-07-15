@@ -153,6 +153,10 @@ const App = {
   },
   preencherCargos(empresa) {
     const sel = $('c_cargo'); const lista = getCargos()[empresa] || [];
+    sel.disabled = false;
+    $('c_addCargo').disabled = false;
+    $('c_addCargo').title = 'Cadastrar novo cargo';
+    $('c_cargoHint').textContent = 'O salario e preenchido automaticamente.';
     sel.innerHTML = '<option value="">Selecione...</option>' + lista.map((c) => `<option value="${c.cargo}" data-sal="${c.salario}">${c.cargo}</option>`).join('');
     const padrao = EMPRESAS[empresa] && EMPRESAS[empresa].cargoPadrao;
     if (padrao && lista.some((c) => c.cargo === padrao)) sel.value = padrao;
@@ -160,6 +164,16 @@ const App = {
     this.onCargoChange();
   },
   onCargoChange() { const o = $('c_cargo').selectedOptions[0]; $('c_salario').value = o ? (o.dataset.sal || '') : ''; },
+  bloquearCargo() {
+    cartaEmpresa = null;
+    $('c_cargo').innerHTML = '<option value="">Selecione a empresa primeiro</option>';
+    $('c_cargo').value = '';
+    $('c_cargo').disabled = true;
+    $('c_addCargo').disabled = true;
+    $('c_addCargo').title = 'Selecione uma empresa antes de cadastrar cargo';
+    $('c_salario').value = '';
+    $('c_cargoHint').textContent = 'Selecione uma empresa para liberar os cargos.';
+  },
 
   // ---- PASSAPORTE tipo ----
   selTipo(t) {
@@ -235,6 +249,7 @@ const App = {
 
   // ---- CARGO MODAL ----
   abrirCargoModal() {
+    if (!cartaEmpresa) return toast('Selecione uma empresa antes de cadastrar cargo.', 'info');
     const sel = $('m_empresa'); sel.innerHTML = Object.keys(EMPRESAS).map((e) => `<option>${e}</option>`).join('');
     if (cartaEmpresa) sel.value = cartaEmpresa;
     $('m_cargo').value = ''; $('m_salario').value = '';
@@ -284,7 +299,7 @@ const App = {
   limpar(tool) {
     const map = { carta: ['c_nome', 'c_endereco', 'c_cep', 'c_rg', 'c_cpf', 'c_salario'], oncare: ['o_local', 'o_unidade', 'o_cargo', 'o_nome', 'o_rg', 'o_cpf', 'o_tel'], passaporte: ['p_nome', 'p_htrab'] };
     (map[tool] || []).forEach((id) => { const el = $(id); el.value = ''; limparErro(el); });
-    if (tool === 'carta') { $('c_cargo').value = ''; }
+    if (tool === 'carta') { this.bloquearCargo(); document.querySelectorAll('#cartaEmpresas .choice-btn').forEach((b) => b.classList.remove('active')); $('cartaInfo').classList.remove('show'); }
     if (tool === 'passaporte') { $('p_escala').value = ''; this.selTipo('BASE'); }
     toast('Formulario limpo.', 'info');
   },
@@ -327,6 +342,7 @@ async function init() {
     .forEach((id) => $(id).addEventListener('input', () => limparErro($(id))));
 
   App.hoje('c_data'); App.hoje('p_data');
+  App.bloquearCargo();
   App.renderConfig();
 }
 init();
