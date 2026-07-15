@@ -12,9 +12,9 @@ try {
 // ---- CONFIG ----
 const SENHA = 'prosecurity';           // senha interna (troque aqui; proteja com Cloudflare Access em producao)
 const EMPRESAS = {
-  'PRO CLEAN':     { base: 'base_clean.pdf',     coords: 'clean',     razao: 'PRO CLEAN HIGIENIZACAO E LIMPEZA LTDA',       cnpj: '16.626.344/0001-40', cargoPadrao: 'AUXILIAR DE LIMPEZA', icon: '🧹' },
-  'PRO SERVICOS':  { base: 'base_porteiro.pdf',  coords: 'porteiro',  razao: 'PRO SECURITY SERVICOS ESPECIALIZADOS LTDA',   cnpj: '56.566.292/0001-89', cargoPadrao: 'PORTEIRO',           icon: '🏢' },
-  'PRO SEGURANCA': { base: 'base_vigilante.pdf', coords: 'vigilante', razao: 'PRO SECURITY SEGURANCA PATRIMONIAL LTDA',     cnpj: '96.231.568/0001-92', cargoPadrao: 'VIGILANTE',          icon: '🛡️' },
+  'PRO CLEAN':     { base: 'base_clean.pdf',     coords: 'clean',     razao: 'PRO CLEAN HIGIENIZACAO E LIMPEZA LTDA',       cnpj: '16.626.344/0001-40', cargoPadrao: 'AUXILIAR DE LIMPEZA', icon: '\u{1F9F9}' },
+  'PRO SERVICOS':  { base: 'base_porteiro.pdf',  coords: 'porteiro',  razao: 'PRO SECURITY SERVICOS ESPECIALIZADOS LTDA',   cnpj: '56.566.292/0001-89', cargoPadrao: 'PORTEIRO',           icon: '\u{1F3E2}' },
+  'PRO SEGURANCA': { base: 'base_vigilante.pdf', coords: 'vigilante', razao: 'PRO SECURITY SEGURANCA PATRIMONIAL LTDA',     cnpj: '96.231.568/0001-92', cargoPadrao: 'VIGILANTE',          icon: '\u{1F6E1}\uFE0F' },
 };
 const DEFAULT_CARGOS = {
   'PRO CLEAN':     [{ cargo: 'AUXILIAR DE LIMPEZA', salario: 'R$ 1.837,40' }],
@@ -153,8 +153,11 @@ const App = {
   },
   preencherCargos(empresa) {
     const sel = $('c_cargo'); const lista = getCargos()[empresa] || [];
-    sel.innerHTML = '<option value="">Selecioneâ€¦</option>' + lista.map((c) => `<option value="${c.cargo}" data-sal="${c.salario}">${c.cargo}</option>`).join('');
-    $('c_salario').value = '';
+    sel.innerHTML = '<option value="">Selecione...</option>' + lista.map((c) => `<option value="${c.cargo}" data-sal="${c.salario}">${c.cargo}</option>`).join('');
+    const padrao = EMPRESAS[empresa] && EMPRESAS[empresa].cargoPadrao;
+    if (padrao && lista.some((c) => c.cargo === padrao)) sel.value = padrao;
+    else if (lista[0]) sel.value = lista[0].cargo;
+    this.onCargoChange();
   },
   onCargoChange() { const o = $('c_cargo').selectedOptions[0]; $('c_salario').value = o ? (o.dataset.sal || '') : ''; },
 
@@ -165,11 +168,11 @@ const App = {
     const end = $('p_endereco'), h = $('p_hapres'), hint = $('p_endHint');
     if (t === 'BASE') {
       end.value = BASE_ENDERECO; end.readOnly = true; h.value = '07:00'; h.readOnly = true;
-      hint.textContent = 'ApresentaÃ§Ã£o direto na BASE (preenchido automaticamente).';
+      hint.textContent = 'Apresentacao direto na BASE (preenchido automaticamente).';
     } else {
       if (end.readOnly) { end.value = ''; h.value = ''; }
       end.readOnly = false; h.readOnly = false;
-      hint.textContent = 'ApresentaÃ§Ã£o direto no POSTO (preencha endereÃ§o e horÃ¡rio).';
+      hint.textContent = 'Apresentacao direto no POSTO (preencha endereco e horario).';
     }
     limparErro(end); limparErro(h);
   },
@@ -180,9 +183,9 @@ const App = {
   async gerarCarta() {
     if (!cartaEmpresa) return toast('Selecione a empresa.', 'error');
     if (!$('c_cargo').value) return toast('Selecione o cargo.', 'error');
-    if (!validar(['c_nome', 'c_endereco', 'c_cep', 'c_rg', 'c_cpf', 'c_data'])) return toast('Preencha os campos obrigatÃ³rios.', 'error');
-    if ($('c_cpf').value.replace(/\D/g, '').length !== 11) { erro('c_cpf'); return toast('CPF invÃ¡lido.', 'error'); }
-    if ($('c_cep').value.replace(/\D/g, '').length !== 8) { erro('c_cep'); return toast('CEP invÃ¡lido.', 'error'); }
+    if (!validar(['c_nome', 'c_endereco', 'c_cep', 'c_rg', 'c_cpf', 'c_data'])) return toast('Preencha os campos obrigatorios.', 'error');
+    if ($('c_cpf').value.replace(/\D/g, '').length !== 11) { erro('c_cpf'); return toast('CPF invalido.', 'error'); }
+    if ($('c_cep').value.replace(/\D/g, '').length !== 8) { erro('c_cep'); return toast('CEP invalido.', 'error'); }
     const btn = $('c_btn'); btn.classList.add('loading'); btn.disabled = true;
     try {
       const e = EMPRESAS[cartaEmpresa];
@@ -198,8 +201,8 @@ const App = {
   // ---- GERAR ONCARE ----
   async gerarOncare() {
     if (!oncareEmpresa) return toast('Selecione a empresa.', 'error');
-    if (!validar(['o_local', 'o_unidade', 'o_data', 'o_cargo', 'o_nome', 'o_rg', 'o_cpf', 'o_tel', 'o_nasc'])) return toast('Preencha os campos obrigatÃ³rios.', 'error');
-    if ($('o_cpf').value.replace(/\D/g, '').length !== 11) { erro('o_cpf'); return toast('CPF invÃ¡lido.', 'error'); }
+    if (!validar(['o_local', 'o_unidade', 'o_data', 'o_cargo', 'o_nome', 'o_rg', 'o_cpf', 'o_tel', 'o_nasc'])) return toast('Preencha os campos obrigatorios.', 'error');
+    if ($('o_cpf').value.replace(/\D/g, '').length !== 11) { erro('o_cpf'); return toast('CPF invalido.', 'error'); }
     const btn = $('o_btn'); btn.classList.add('loading'); btn.disabled = true;
     try {
       const nome = upper($('o_nome').value);
@@ -214,7 +217,7 @@ const App = {
   // ---- GERAR PASSAPORTE ----
   async gerarPassaporte() {
     const reqs = ['p_nome', 'p_data', 'p_escala', 'p_htrab', 'p_endereco', 'p_hapres'];
-    if (!validar(reqs)) return toast('Preencha os campos obrigatÃ³rios.', 'error');
+    if (!validar(reqs)) return toast('Preencha os campos obrigatorios.', 'error');
     const btn = $('p_btn'); btn.classList.add('loading'); btn.disabled = true;
     try {
       const nome = upper($('p_nome').value);
@@ -240,9 +243,9 @@ const App = {
   fecharCargoModal() { $('cargoModal').classList.remove('show'); },
   salvarCargo() {
     const empresa = $('m_empresa').value, cargo = upper($('m_cargo').value), salario = $('m_salario').value.trim();
-    if (!cargo || !salario) return toast('Informe cargo e salÃ¡rio.', 'error');
+    if (!cargo || !salario) return toast('Informe cargo e salario.', 'error');
     const all = getCargos(); (all[empresa] = all[empresa] || []);
-    if (all[empresa].some((c) => c.cargo === cargo)) return toast('Cargo jÃ¡ cadastrado nesta empresa.', 'error');
+    if (all[empresa].some((c) => c.cargo === cargo)) return toast('Cargo ja cadastrado nesta empresa.', 'error');
     all[empresa].push({ cargo, salario }); setCargos(all);
     this.fecharCargoModal();
     if (cartaEmpresa === empresa) { this.preencherCargos(empresa); $('c_cargo').value = cargo; this.onCargoChange(); }
@@ -274,7 +277,7 @@ const App = {
   importarCargos(ev) {
     const f = ev.target.files[0]; if (!f) return;
     const r = new FileReader();
-    r.onload = () => { try { setCargos(JSON.parse(r.result)); this.renderConfig(); if (cartaEmpresa) this.preencherCargos(cartaEmpresa); toast('Cargos importados.', 'success'); } catch { toast('Arquivo invÃ¡lido.', 'error'); } };
+    r.onload = () => { try { setCargos(JSON.parse(r.result)); this.renderConfig(); if (cartaEmpresa) this.preencherCargos(cartaEmpresa); toast('Cargos importados.', 'success'); } catch { toast('Arquivo invalido.', 'error'); } };
     r.readAsText(f); ev.target.value = '';
   },
 
@@ -283,7 +286,7 @@ const App = {
     (map[tool] || []).forEach((id) => { const el = $(id); el.value = ''; limparErro(el); });
     if (tool === 'carta') { $('c_cargo').value = ''; }
     if (tool === 'passaporte') { $('p_escala').value = ''; this.selTipo('BASE'); }
-    toast('FormulÃ¡rio limpo.', 'info');
+    toast('Formulario limpo.', 'info');
   },
 };
 window.App = App;
@@ -311,7 +314,7 @@ async function init() {
   mkEmp('cartaEmpresas', 'carta'); mkEmp('oncareEmpresas', 'oncare');
 
   // tipos passaporte
-  $('passTipos').innerHTML = [['BASE', 'BS'], ['POSTO', 'PT']].map(([t, ic]) =>
+  $('passTipos').innerHTML = [['BASE', '\u{1F3E0}'], ['POSTO', '\u{1F4CD}']].map(([t, ic]) =>
     `<button class="choice-btn" data-v="${t}" onclick="App.selTipo('${t}')"><span class="choice-icon">${ic}</span><span class="choice-name">${t}</span></button>`
   ).join('');
   App.selTipo('BASE');
