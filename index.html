@@ -164,7 +164,7 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
           <div class="field full-width"><label for="c_nome">Nome completo<span class="req">*</span></label><input type="text" id="c_nome" placeholder="JOÃO DA SILVA SANTOS" autocomplete="off"/><span class="field-error" id="err-c_nome">Campo obrigatório.</span></div>
           <div class="field full-width"><label for="c_endereco">Endereço<span class="req">*</span></label><input type="text" id="c_endereco" placeholder="RUA DAS FLORES, 123 - JARDIM PAULISTA" autocomplete="off"/><span class="field-error" id="err-c_endereco">Campo obrigatório.</span></div>
           <div class="field"><label for="c_cep">CEP<span class="req">*</span></label><input type="text" id="c_cep" placeholder="00000-000" maxlength="9" autocomplete="off"/><span class="field-error" id="err-c_cep">CEP inválido.</span></div>
-          <div class="field"><label for="c_cidade">Cidade</label><input type="text" id="c_cidade" value="SÃO PAULO - SP" readonly/><span class="field-hint">Fixo no modelo oficial.</span></div>
+          <div class="field"><label for="c_cidade">Cidade<span class="req">*</span></label><input type="text" id="c_cidade" value="SÃO PAULO - SP" autocomplete="off"/><span class="field-hint">Preenchido automaticamente, mas pode ser alterado.</span><span class="field-error" id="err-c_cidade">Campo obrigatório.</span></div>
           <div class="field"><label for="c_rg">RG<span class="req">*</span></label><input type="text" id="c_rg" placeholder="12.345.678-9" autocomplete="off"/><span class="field-error" id="err-c_rg">Campo obrigatório.</span></div>
           <div class="field"><label for="c_cpf">CPF<span class="req">*</span></label><input type="text" id="c_cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="off"/><span class="field-error" id="err-c_cpf">CPF inválido.</span></div>
         </div>
@@ -179,14 +179,18 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
   <!-- ===== ONCARE ===== -->
   <section class="view hidden" id="view-oncare">
     <button class="back-link" onclick="abrirTela('rs')">← Voltar para R&amp;S</button>
-    <div class="page-header"><h1 class="page-title">Gerador de Guia OnCare</h1><p class="page-desc">Solicitação de agendamento de exame admissional.</p></div>
+    <div class="page-header"><h1 class="page-title">Gerador de Guia OnCare</h1><p class="page-desc">Solicitação de agendamento de exame admissional ou complementar.</p></div>
     <div class="card">
       <div class="card-section">
         <div class="section-label"><div class="section-label-num">1</div><div class="section-label-text">Empresa</div></div>
         <div class="choice-grid" id="oncareEmpresas"></div>
       </div>
       <div class="card-section">
-        <div class="section-label"><div class="section-label-num">2</div><div class="section-label-text">Dados do Agendamento</div></div>
+        <div class="section-label"><div class="section-label-num">2</div><div class="section-label-text">Tipo de Exame</div></div>
+        <div class="choice-grid cols-2" id="oncareTipos"></div>
+      </div>
+      <div class="card-section">
+        <div class="section-label"><div class="section-label-num">3</div><div class="section-label-text">Dados do Agendamento</div></div>
         <div class="form-grid">
           <div class="field"><label for="o_local">Local de agendamento<span class="req">*</span></label><input type="text" id="o_local" placeholder="SANTO AMARO" autocomplete="off"/><span class="field-error" id="err-o_local">Campo obrigatório.</span></div>
           <div class="field"><label for="o_unidade">Unidade / Posto<span class="req">*</span></label><input type="text" id="o_unidade" placeholder="DOMANI BROOKLIN" autocomplete="off"/><span class="field-error" id="err-o_unidade">Campo obrigatório.</span></div>
@@ -201,6 +205,8 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
       </div>
       <div class="actions-section">
         <button class="btn-primary" id="o_btn" onclick="App.gerarOncare()"><span class="btn-text">⬇ Gerar PDF</span><div class="btn-spinner"></div></button>
+        <button class="btn-secondary" type="button" onclick="App.copiarAssuntoOncare()">Copiar assunto</button>
+        <button class="btn-secondary" type="button" onclick="App.copiarEmailOncare()">Copiar e-mail</button>
         <button class="btn-secondary" onclick="App.limpar('oncare')">↺ Limpar</button>
       </div>
     </div>

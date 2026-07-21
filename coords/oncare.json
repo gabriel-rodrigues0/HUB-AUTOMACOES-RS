@@ -11,6 +11,41 @@
       "x": 142.3,
       "size": 10
     },
+    "TIPO_EXAME": {
+      "y": 548.1,
+      "x": 142.3,
+      "size": 10,
+      "whiteout": {
+        "x": 138,
+        "y": 543,
+        "w": 137,
+        "h": 16
+      }
+    },
+    "MARCA_ADMISSIONAL": {
+      "y": 548.1,
+      "x": 304,
+      "size": 11,
+      "font": "helvB",
+      "whiteout": {
+        "x": 299,
+        "y": 543,
+        "w": 18,
+        "h": 16
+      }
+    },
+    "MARCA_COMPLEMENTAR": {
+      "y": 548.1,
+      "x": 304,
+      "size": 11,
+      "font": "helvB",
+      "whiteout": {
+        "x": 299,
+        "y": 543,
+        "w": 18,
+        "h": 16
+      }
+    },
     "LOCAL": {
       "y": 469.1,
       "x": 142.3,

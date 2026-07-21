@@ -22,10 +22,14 @@ const DEFAULT_CARGOS = {
   'PRO SEGURANCA': [{ cargo: 'VIGILANTE',           salario: 'R$ 2.271,74' }],
 };
 const BASE_ENDERECO = 'Rua Ibirapora, 100 - Jardim Londrina';
+const TIPO_EXAMES = {
+  admissional: { label: 'Admissional', icon: 'AD' },
+  complementar: { label: 'Complementar', icon: 'CP' },
+};
 
 // ---- ESTADO ----
 let CARTAS = {}, ONCARE = {}, PASSAPORTE = {};
-let cartaEmpresa = null, oncareEmpresa = null, passTipo = 'BASE';
+let cartaEmpresa = null, oncareEmpresa = null, passTipo = 'BASE', tipoExame = 'admissional';
 
 // ---- UTIL ----
 const $ = (id) => document.getElementById(id);
@@ -94,6 +98,21 @@ function baixar(bytes, nome) {
   const a = document.createElement('a');
   a.href = url; a.download = nome; document.body.appendChild(a); a.click();
   a.remove(); setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+async function copiarTexto(texto) {
+  if (navigator.clipboard && window.isSecureContext) {
+    await navigator.clipboard.writeText(texto);
+    return;
+  }
+  const area = document.createElement('textarea');
+  area.value = texto;
+  area.setAttribute('readonly', '');
+  area.style.position = 'fixed';
+  area.style.left = '-9999px';
+  document.body.appendChild(area);
+  area.select();
+  document.execCommand('copy');
+  area.remove();
 }
 function toast(msg, tipo = 'info') {
   const ic = { success: 'OK', error: '!', info: 'i' };
@@ -195,6 +214,10 @@ const App = {
     }
     limparErro(end); limparErro(h);
   },
+  selTipoExame(tipo) {
+    tipoExame = tipo;
+    document.querySelectorAll('#oncareTipos .choice-btn').forEach((b) => b.classList.toggle('active', b.dataset.v === tipo));
+  },
 
   hoje(id) { const d = new Date(); $(id).value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; },
 
@@ -202,14 +225,14 @@ const App = {
   async gerarCarta() {
     if (!cartaEmpresa) return toast('Selecione a empresa.', 'error');
     if (!$('c_cargo').value) return toast('Selecione o cargo.', 'error');
-    if (!validar(['c_nome', 'c_endereco', 'c_cep', 'c_rg', 'c_cpf', 'c_data'])) return toast('Preencha os campos obrigatorios.', 'error');
+    if (!validar(['c_nome', 'c_endereco', 'c_cep', 'c_cidade', 'c_rg', 'c_cpf', 'c_data'])) return toast('Preencha os campos obrigatorios.', 'error');
     if ($('c_cpf').value.replace(/\D/g, '').length !== 11) { erro('c_cpf'); return toast('CPF invalido.', 'error'); }
     if ($('c_cep').value.replace(/\D/g, '').length !== 8) { erro('c_cep'); return toast('CEP invalido.', 'error'); }
     const btn = $('c_btn'); btn.classList.add('loading'); btn.disabled = true;
     try {
       const e = EMPRESAS[cartaEmpresa];
       const nome = upper($('c_nome').value), cargo = $('c_cargo').value;
-      const data = { NOME: nome, CARGO: cargo, SALARIO: $('c_salario').value, ENDERECO: upper($('c_endereco').value), CEP: $('c_cep').value.trim(), RG: $('c_rg').value.trim(), CPF: $('c_cpf').value.trim(), DATA: fmtData($('c_data').value) };
+      const data = { NOME: nome, CARGO: cargo, SALARIO: $('c_salario').value, ENDERECO: upper($('c_endereco').value), CEP: $('c_cep').value.trim(), CIDADE: upper($('c_cidade').value), RG: $('c_rg').value.trim(), CPF: $('c_cpf').value.trim(), DATA: fmtData($('c_data').value) };
       const bytes = await fillCarta(PDFLib, await baseBytes(e.base), CARTAS[e.coords], data);
       baixar(bytes, `${nome} - ${cargo}.pdf`);
       toast('Carta gerada com sucesso.', 'success');
@@ -225,12 +248,63 @@ const App = {
     const btn = $('o_btn'); btn.classList.add('loading'); btn.disabled = true;
     try {
       const nome = upper($('o_nome').value);
-      const data = { EMPRESA: EMPRESAS[oncareEmpresa].razao, LOCAL: upper($('o_local').value), DATA_EXAME: fmtData($('o_data').value), UNIDADE: upper($('o_unidade').value), CARGO: upper($('o_cargo').value), NOME: nome, RG: $('o_rg').value.trim(), CPF: $('o_cpf').value.trim(), TEL: $('o_tel').value.trim(), NASCIMENTO: fmtData($('o_nasc').value) };
+      const data = {
+        EMPRESA: EMPRESAS[oncareEmpresa].razao,
+        TIPO_EXAME: TIPO_EXAMES[tipoExame].label.toUpperCase(),
+        MARCA_ADMISSIONAL: tipoExame === 'admissional' ? 'X' : '',
+        MARCA_COMPLEMENTAR: tipoExame === 'complementar' ? 'X' : '',
+        LOCAL: upper($('o_local').value),
+        DATA_EXAME: fmtData($('o_data').value),
+        UNIDADE: upper($('o_unidade').value),
+        CARGO: upper($('o_cargo').value),
+        NOME: nome,
+        RG: $('o_rg').value.trim(),
+        CPF: $('o_cpf').value.trim(),
+        TEL: $('o_tel').value.trim(),
+        NASCIMENTO: fmtData($('o_nasc').value),
+      };
       const bytes = await fillOncare(PDFLib, await baseBytes('base_oncare.pdf'), ONCARE, data);
       baixar(bytes, `GUIA ONCARE - ${nome}.pdf`);
       toast('Guia OnCare gerada com sucesso.', 'success');
     } catch (err) { console.error(err); toast('Erro ao gerar: ' + err.message, 'error'); }
     finally { btn.classList.remove('loading'); btn.disabled = false; }
+  },
+  assuntoOncare() {
+    if (!$('o_data').value) {
+      erro('o_data');
+      toast('Informe a data do exame para copiar o assunto.', 'error');
+      return '';
+    }
+    return `AGENDAMENTO ${fmtData($('o_data').value).slice(0, 5)}`;
+  },
+  emailOncare() {
+    const data = fmtData($('o_data').value);
+    if (!data) {
+      erro('o_data');
+      toast('Informe a data do exame para copiar o e-mail.', 'error');
+      return '';
+    }
+    return [
+      'Boa tarde!',
+      '',
+      `Por gentileza, realizar o agendamento para o dia ${data}.`,
+      '',
+      'Seguem anexos a guia OnCare e os documentos necessarios.',
+      '',
+      'Atenciosamente,',
+    ].join('\n');
+  },
+  async copiarAssuntoOncare() {
+    const assunto = this.assuntoOncare();
+    if (!assunto) return;
+    await copiarTexto(assunto);
+    toast('Assunto copiado.', 'success');
+  },
+  async copiarEmailOncare() {
+    const corpo = this.emailOncare();
+    if (!corpo) return;
+    await copiarTexto(corpo);
+    toast('Modelo de e-mail copiado.', 'success');
   },
 
   // ---- GERAR PASSAPORTE ----
@@ -302,9 +376,10 @@ const App = {
   },
 
   limpar(tool) {
-    const map = { carta: ['c_nome', 'c_endereco', 'c_cep', 'c_rg', 'c_cpf', 'c_salario'], oncare: ['o_local', 'o_unidade', 'o_cargo', 'o_nome', 'o_rg', 'o_cpf', 'o_tel'], passaporte: ['p_nome', 'p_htrab'] };
+    const map = { carta: ['c_nome', 'c_endereco', 'c_cep', 'c_cidade', 'c_rg', 'c_cpf', 'c_salario'], oncare: ['o_local', 'o_unidade', 'o_cargo', 'o_nome', 'o_rg', 'o_cpf', 'o_tel', 'o_nasc'], passaporte: ['p_nome', 'p_htrab'] };
     (map[tool] || []).forEach((id) => { const el = $(id); el.value = ''; limparErro(el); });
-    if (tool === 'carta') { this.bloquearCargo(); document.querySelectorAll('#cartaEmpresas .choice-btn').forEach((b) => b.classList.remove('active')); $('cartaInfo').classList.remove('show'); }
+    if (tool === 'carta') { $('c_cidade').value = 'SÃO PAULO - SP'; this.bloquearCargo(); document.querySelectorAll('#cartaEmpresas .choice-btn').forEach((b) => b.classList.remove('active')); $('cartaInfo').classList.remove('show'); }
+    if (tool === 'oncare') { this.selTipoExame('admissional'); document.querySelectorAll('#oncareEmpresas .choice-btn').forEach((b) => b.classList.remove('active')); oncareEmpresa = null; }
     if (tool === 'passaporte') { $('p_escala').value = ''; this.selTipo('BASE'); }
     toast('Formulario limpo.', 'info');
   },
@@ -333,6 +408,11 @@ async function init() {
   };
   mkEmp('cartaEmpresas', 'carta'); mkEmp('oncareEmpresas', 'oncare');
 
+  $('oncareTipos').innerHTML = Object.entries(TIPO_EXAMES).map(([tipo, item]) =>
+    `<button class="choice-btn" data-v="${tipo}" onclick="App.selTipoExame('${tipo}')"><span class="choice-icon">${item.icon}</span><span class="choice-name">${item.label}</span></button>`
+  ).join('');
+  App.selTipoExame('admissional');
+
   // tipos passaporte
   $('passTipos').innerHTML = [['BASE', '\u{1F3E0}'], ['POSTO', '\u{1F4CD}']].map(([t, ic]) =>
     `<button class="choice-btn" data-v="${t}" onclick="App.selTipo('${t}')"><span class="choice-icon">${ic}</span><span class="choice-name">${t}</span></button>`
@@ -344,7 +424,7 @@ async function init() {
   mask('c_cpf', mascaraCPF); mask('c_cep', mascaraCEP);
   mask('o_cpf', mascaraCPF); mask('o_tel', mascaraTel);
   mask('m_salario', mascaraMoedaBRL);
-  ['c_nome', 'c_endereco', 'c_rg', 'c_data', 'o_local', 'o_unidade', 'o_data', 'o_cargo', 'o_nome', 'o_rg', 'o_nasc', 'p_nome', 'p_data', 'p_escala', 'p_htrab', 'p_endereco', 'p_hapres']
+  ['c_nome', 'c_endereco', 'c_cidade', 'c_rg', 'c_data', 'o_local', 'o_unidade', 'o_data', 'o_cargo', 'o_nome', 'o_rg', 'o_nasc', 'p_nome', 'p_data', 'p_escala', 'p_htrab', 'p_endereco', 'p_hapres']
     .forEach((id) => $(id).addEventListener('input', () => limparErro($(id))));
 
   App.hoje('c_data'); App.hoje('p_data');
