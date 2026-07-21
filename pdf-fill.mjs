@@ -70,7 +70,7 @@ export async function fillCarta(lib, baseBytes, coords, data) {
 }
 
 // ---------------- GUIA ONCARE ----------------
-const ONCARE_FIELDS = ['EMPRESA', 'TIPO_EXAME', 'MARCA_ADMISSIONAL', 'MARCA_COMPLEMENTAR', 'LOCAL', 'DATA_EXAME', 'UNIDADE', 'SETOR', 'CARGO', 'NOME', 'RG', 'CPF', 'TEL', 'NASCIMENTO'];
+const ONCARE_FIELDS = ['EMPRESA', 'MARCA_ADMISSIONAL', 'MARCA_COMPLEMENTAR', 'MARCA_MUDANCA_FUNCAO', 'LOCAL', 'DATA_EXAME', 'UNIDADE', 'SETOR', 'CARGO', 'NOME', 'RG', 'CPF', 'TEL', 'NASCIMENTO'];
 export async function fillOncare(lib, baseBytes, coords, data) {
   const doc = await lib.PDFDocument.load(baseBytes);
   const fnts = await fonts(lib, doc);
