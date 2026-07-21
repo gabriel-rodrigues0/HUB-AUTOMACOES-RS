@@ -4,80 +4,102 @@
     "w": 595.3,
     "h": 841.9
   },
-  "valX": 142.3,
   "fields": {
     "EMPRESA": {
       "y": 587.7,
-      "x": 142.3,
-      "size": 10
+      "x": 347,
+      "size": 10,
+      "align": "center"
     },
-    "MARCA_ADMISSIONAL": {
+    "TIPO_EXAME_TEXTO": {
+      "y": 548.1,
+      "x": 205,
+      "size": 10,
+      "align": "center",
+      "color": "red",
+      "fill": {
+        "x": 143,
+        "y": 542.2,
+        "w": 126,
+        "h": 17.8,
+        "color": "yellow"
+      }
+    },
+    "MARCA_TIPO_EXAME": {
       "y": 548.1,
       "x": 304,
       "size": 11,
-      "font": "helvB"
-    },
-    "MARCA_COMPLEMENTAR": {
-      "y": 548.1,
-      "x": 304,
-      "size": 11,
-      "font": "helvB"
+      "font": "helvB",
+      "align": "center",
+      "color": "red"
     },
     "MARCA_MUDANCA_FUNCAO": {
       "y": 526.5,
       "x": 547,
       "size": 11,
-      "font": "helvB"
+      "font": "helvB",
+      "align": "center",
+      "color": "red"
     },
     "LOCAL": {
       "y": 469.1,
-      "x": 142.3,
-      "size": 10
+      "x": 347,
+      "size": 10,
+      "align": "center"
     },
     "DATA_EXAME": {
       "y": 408.8,
-      "x": 142.3,
-      "size": 10
+      "x": 347,
+      "size": 10,
+      "align": "center"
     },
     "UNIDADE": {
       "y": 387.2,
-      "x": 142.3,
-      "size": 10
+      "x": 347,
+      "size": 10,
+      "align": "center"
     },
     "SETOR": {
       "y": 365.6,
-      "x": 142.3,
-      "size": 10
+      "x": 347,
+      "size": 10,
+      "align": "center"
     },
     "CARGO": {
       "y": 344,
-      "x": 142.3,
-      "size": 10
+      "x": 347,
+      "size": 10,
+      "align": "center"
     },
     "NOME": {
       "y": 300.8,
-      "x": 142.3,
-      "size": 10
+      "x": 347,
+      "size": 10,
+      "align": "center"
     },
     "RG": {
       "y": 279.2,
-      "x": 142.3,
-      "size": 10
+      "x": 347,
+      "size": 10,
+      "align": "center"
     },
     "CPF": {
       "y": 257.6,
-      "x": 142.3,
-      "size": 10
+      "x": 347,
+      "size": 10,
+      "align": "center"
     },
     "TEL": {
       "y": 236,
-      "x": 142.3,
-      "size": 10
+      "x": 347,
+      "size": 10,
+      "align": "center"
     },
     "NASCIMENTO": {
       "y": 214.3,
-      "x": 142.3,
-      "size": 10
+      "x": 347,
+      "size": 10,
+      "align": "center"
     }
   }
 }

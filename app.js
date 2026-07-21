@@ -250,8 +250,8 @@ const App = {
       const nome = upper($('o_nome').value);
       const data = {
         EMPRESA: EMPRESAS[oncareEmpresa].razao,
-        MARCA_ADMISSIONAL: '',
-        MARCA_COMPLEMENTAR: tipoExame === 'complementar' ? 'X' : '',
+        TIPO_EXAME_TEXTO: TIPO_EXAMES[tipoExame].label.toUpperCase(),
+        MARCA_TIPO_EXAME: 'X',
         MARCA_MUDANCA_FUNCAO: tipoExame === 'complementar' ? 'X' : '',
         LOCAL: upper($('o_local').value),
         DATA_EXAME: fmtData($('o_data').value),

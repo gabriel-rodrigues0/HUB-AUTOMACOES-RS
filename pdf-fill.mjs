@@ -6,6 +6,8 @@
  */
 const BLACK = (lib) => lib.rgb(0, 0, 0);
 const WHITE = (lib) => lib.rgb(1, 1, 1);
+const RED = (lib) => lib.rgb(1, 0, 0);
+const YELLOW = (lib) => lib.rgb(1, 1, 0);
 
 async function fonts(lib, doc) {
   return {
@@ -37,20 +39,26 @@ function drawValue(lib, page, fnts, cfg, text) {
     const w = cfg.whiteout;
     page.drawRectangle({ x: w.x, y: w.y, width: w.w, height: w.h, color: WHITE(lib) });
   }
+  if (cfg.fill) {
+    const w = cfg.fill;
+    const fillColor = w.color === 'yellow' ? YELLOW(lib) : WHITE(lib);
+    page.drawRectangle({ x: w.x, y: w.y, width: w.w, height: w.h, color: fillColor });
+  }
   const full = (cfg.prefix || '') + text;
+  const color = cfg.color === 'red' ? RED(lib) : BLACK(lib);
   // multilinha (endereco do posto)
   if (cfg.maxWidth) {
     const lines = wrap(full, font, size, cfg.maxWidth);
     const lh = cfg.lineHeight || size + 4;
-    lines.forEach((ln, i) => page.drawText(ln, { x: cfg.x, y: cfg.y - i * lh, size, font, color: BLACK(lib) }));
+    lines.forEach((ln, i) => page.drawText(ln, { x: cfg.x, y: cfg.y - i * lh, size, font, color }));
     return;
   }
   let x = cfg.x;
   const tw = font.widthOfTextAtSize(full, size);
   if (cfg.align === 'center') x = cfg.x - tw / 2;
-  page.drawText(full, { x, y: cfg.y, size, font, color: BLACK(lib) });
+  page.drawText(full, { x, y: cfg.y, size, font, color });
   if (cfg.underline) {
-    page.drawLine({ start: { x, y: cfg.y - 2 }, end: { x: x + tw, y: cfg.y - 2 }, thickness: 1, color: BLACK(lib) });
+    page.drawLine({ start: { x, y: cfg.y - 2 }, end: { x: x + tw, y: cfg.y - 2 }, thickness: 1, color });
   }
 }
 
@@ -70,7 +78,7 @@ export async function fillCarta(lib, baseBytes, coords, data) {
 }
 
 // ---------------- GUIA ONCARE ----------------
-const ONCARE_FIELDS = ['EMPRESA', 'MARCA_ADMISSIONAL', 'MARCA_COMPLEMENTAR', 'MARCA_MUDANCA_FUNCAO', 'LOCAL', 'DATA_EXAME', 'UNIDADE', 'SETOR', 'CARGO', 'NOME', 'RG', 'CPF', 'TEL', 'NASCIMENTO'];
+const ONCARE_FIELDS = ['EMPRESA', 'TIPO_EXAME_TEXTO', 'MARCA_TIPO_EXAME', 'MARCA_MUDANCA_FUNCAO', 'LOCAL', 'DATA_EXAME', 'UNIDADE', 'SETOR', 'CARGO', 'NOME', 'RG', 'CPF', 'TEL', 'NASCIMENTO'];
 export async function fillOncare(lib, baseBytes, coords, data) {
   const doc = await lib.PDFDocument.load(baseBytes);
   const fnts = await fonts(lib, doc);
