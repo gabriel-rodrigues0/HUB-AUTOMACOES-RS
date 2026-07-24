@@ -71,14 +71,14 @@ export async function fillCarta(lib, baseBytes, coords, data) {
   for (const f of CARTA_FIELDS) {
     const cfg = coords.fields[f];
     if (cfg && data[f] != null && data[f] !== '') {
-      page.drawText(String(data[f]), { x: cfg.x, y: cfg.y, size: cfg.size || 11, font: fnts.times, color: BLACK(lib) });
+      drawValue(lib, page, fnts, { font: 'times', ...cfg }, String(data[f]));
     }
   }
   return doc.save();
 }
 
 // ---------------- GUIA ONCARE ----------------
-const ONCARE_FIELDS = ['EMPRESA', 'TIPO_EXAME_TEXTO', 'MARCA_TIPO_EXAME', 'MARCA_MUDANCA_FUNCAO', 'LOCAL', 'DATA_EXAME', 'UNIDADE', 'SETOR', 'CARGO', 'NOME', 'RG', 'CPF', 'TEL', 'NASCIMENTO'];
+const ONCARE_FIELDS = ['EMPRESA', 'TIPO_EXAME_TEXTO', 'MARCA_MUDANCA_FUNCAO', 'LOCAL', 'DATA_EXAME', 'UNIDADE', 'SETOR', 'CARGO', 'NOME', 'RG', 'CPF', 'TEL', 'NASCIMENTO'];
 export async function fillOncare(lib, baseBytes, coords, data) {
   const doc = await lib.PDFDocument.load(baseBytes);
   const fnts = await fonts(lib, doc);

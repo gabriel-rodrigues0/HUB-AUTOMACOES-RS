@@ -34,6 +34,7 @@ let cartaEmpresa = null, oncareEmpresa = null, passTipo = 'BASE', tipoExame = 'a
 // ---- UTIL ----
 const $ = (id) => document.getElementById(id);
 const upper = (s) => (s || '').trim().toUpperCase();
+const semAcentos = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 function fmtData(v) { if (!v) return ''; const [y, m, d] = v.split('-'); return `${d}/${m}/${y}`; }
 function cloneDefaultCargos() { return JSON.parse(JSON.stringify(DEFAULT_CARGOS)); }
 function normalizarEmpresa(nome) {
@@ -232,7 +233,9 @@ const App = {
     try {
       const e = EMPRESAS[cartaEmpresa];
       const nome = upper($('c_nome').value), cargo = $('c_cargo').value;
-      const data = { NOME: nome, CARGO: cargo, SALARIO: $('c_salario').value, ENDERECO: upper($('c_endereco').value), CEP: $('c_cep').value.trim(), CIDADE: upper($('c_cidade').value), RG: $('c_rg').value.trim(), CPF: $('c_cpf').value.trim(), DATA: fmtData($('c_data').value) };
+      const cidade = upper($('c_cidade').value);
+      const cidadePdf = semAcentos(cidade) === 'SAO PAULO - SP' ? '' : cidade;
+      const data = { NOME: nome, CARGO: cargo, SALARIO: $('c_salario').value, ENDERECO: upper($('c_endereco').value), CEP: $('c_cep').value.trim(), CIDADE: cidadePdf, RG: $('c_rg').value.trim(), CPF: $('c_cpf').value.trim(), DATA: fmtData($('c_data').value) };
       const bytes = await fillCarta(PDFLib, await baseBytes(e.base), CARTAS[e.coords], data);
       baixar(bytes, `${nome} - ${cargo}.pdf`);
       toast('Carta gerada com sucesso.', 'success');
@@ -251,7 +254,6 @@ const App = {
       const data = {
         EMPRESA: EMPRESAS[oncareEmpresa].razao,
         TIPO_EXAME_TEXTO: TIPO_EXAMES[tipoExame].label.toUpperCase(),
-        MARCA_TIPO_EXAME: 'X',
         MARCA_MUDANCA_FUNCAO: tipoExame === 'complementar' ? 'X' : '',
         LOCAL: upper($('o_local').value),
         DATA_EXAME: fmtData($('o_data').value),
