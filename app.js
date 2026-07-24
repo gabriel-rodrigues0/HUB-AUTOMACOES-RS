@@ -17,15 +17,79 @@ const EMPRESAS = {
   'PRO SEGURANCA': { base: 'base_vigilante.pdf', coords: 'vigilante', razao: 'PRO SECURITY SEGURANCA PATRIMONIAL LTDA',     cnpj: '96.231.568/0001-92', cargoPadrao: 'VIGILANTE',          icon: '\u{1F6E1}\uFE0F' },
 };
 const DEFAULT_CARGOS = {
-  'PRO CLEAN':     [{ cargo: 'AUXILIAR DE LIMPEZA', salario: 'R$ 1.837,40' }],
-  'PRO SERVICOS':  [{ cargo: 'PORTEIRO',            salario: 'R$ 2.031,57' }],
-  'PRO SEGURANCA': [{ cargo: 'VIGILANTE',           salario: 'R$ 2.271,74' }],
+  'PRO CLEAN': [
+    { cargo: 'AUXILIAR DE LIMPEZA', salario: 'R$ 1.837,40' },
+    { cargo: 'AUXILIAR DE SERVIÇOS GERAIS', salario: 'R$ 1.890,24' },
+    { cargo: 'AUXILIAR DE MANUTENCAO', salario: 'R$ 2.750,00' },
+  ],
+  'PRO SERVICOS': [
+    { cargo: 'PORTEIRO', salario: 'R$ 2.031,57' },
+    { cargo: 'AUXILIAR ADMINISTRATIVO', salario: 'R$ 2.447,37' },
+  ],
+  'PRO SEGURANCA': [
+    { cargo: 'VIGILANTE', salario: 'R$ 2.271,74' },
+    { cargo: 'VSPP', salario: 'R$ 3.848,75' },
+  ],
 };
 const BASE_ENDERECO = 'Rua Ibirapora, 100 - Jardim Londrina';
 const TIPO_EXAMES = {
   admissional: { label: 'Admissional', icon: 'AD' },
   complementar: { label: 'Complementar', icon: 'CP' },
 };
+const PASSAPORTE_HORARIOS = [
+  '12X36 - 06:00 ÀS 18:00',
+  '12X36 - 07:00 ÀS 19:00',
+  '12X36 - 08:00 ÀS 16:20',
+  '12X36 - 08:00 ÀS 17:00',
+  '12X36 - 08:00 ÀS 20:00',
+  '12X36 - 09:00 ÀS 21:00',
+  '12X36 - 10:00 ÀS 19:00',
+  '12X36 - 10:00 ÀS 22:00',
+  '12X36 - 11:00 ÀS 23:00',
+  '12X36 - 18:00 ÀS 06:00',
+  '12X36 - 19:00 ÀS 07:00',
+  '12X36 - FOLGUISTA',
+  '4X2 - 06:00 ÀS 18:00',
+  '4X2 - 09:00 ÀS 20:00',
+  '4X2 - 14:00 ÀS 22:00',
+  '4X2 - 18:00 ÀS 06:00',
+  '4X2 - FOLGUISTA',
+  '5X1 - 06:00 ÀS 14:00',
+  '5X1 - 06:00 ÀS 18:00',
+  '5X1 - 14:00 ÀS 22:00',
+  '5X1 - 18:00 ÀS 06:00',
+  '5X1 - 19:00 ÀS 05:00',
+  '5X1 - 22:00 ÀS 07:00',
+  '5X1 - FOLGUISTA',
+  '5X2 - 08:00 ÀS 17:00',
+  '5X2 - FOLGUISTA',
+  '6X1 - 06:00 ÀS 14:20',
+  '6X1 - 06:00 ÀS 15:00',
+  '6X1 - 07:00 ÀS 15:20',
+  '6X1 - 07:00 ÀS 15:36',
+  '6X1 - 07:00 ÀS 16:00',
+  '6X1 - 07:00 ÀS 17:00',
+  '6X1 - 08:00 ÀS 10:20',
+  '6X1 - 08:00 ÀS 16:00',
+  '6X1 - 08:00 ÀS 16:20',
+  '6X1 - 08:00 ÀS 17:00',
+  '6X1 - 08:00 ÀS 17:20',
+  '6X1 - 08:00 ÀS 18:00',
+  '6X1 - 08:20 ÀS 16:40',
+  '6X1 - 09:00 ÀS 17:20',
+  '6X1 - 09:00 ÀS 18:00',
+  '6X1 - 09:40 ÀS 18:00',
+  '6X1 - 10:00 ÀS 18:20',
+  '6X1 - 10:00 ÀS 19:00',
+  '6X1 - 10:40 ÀS 19:00',
+  '6X1 - 11:00 ÀS 20:00',
+  '6X1 - 11:40 ÀS 20:00',
+  '6X1 - 12:00 ÀS 18:00',
+  '6X1 - 12:40 ÀS 21:00',
+  '6X1 - 14:00 ÀS 22:00',
+  '6X1 - FOLGUISTA',
+];
+const PASSAPORTE_ESCALAS = [...new Set(PASSAPORTE_HORARIOS.map((item) => item.split(' - ')[0]))];
 
 // ---- ESTADO ----
 let CARTAS = {}, ONCARE = {}, PASSAPORTE = {};
@@ -133,6 +197,30 @@ function mascaraMoedaBRL(i) {
   const valor = Number(centavos) / 100;
   i.value = valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
+function escalaDoHorario(valor) {
+  const texto = upper(valor).replace(/\s+/g, ' ').trim();
+  return PASSAPORTE_ESCALAS.find((escala) => texto.startsWith(escala));
+}
+function horarioSemEscala(valor) {
+  const escala = escalaDoHorario(valor);
+  if (!escala) return (valor || '').trim();
+  return (valor || '').trim().replace(new RegExp('^' + escala + '\\s*-?\\s*', 'i'), '').trim();
+}
+function textoPdfPassaporte(valor) {
+  return semAcentos(valor).replace(/\bA\s+S\b/g, 'AS').replace(/[?�]S/g, 'AS').replace(/\s+/g, ' ').trim();
+}
+function renderHorariosPassaporte() {
+  const lista = $('p_htrab_options');
+  if (!lista) return;
+  const escala = $('p_escala') && $('p_escala').value;
+  const horarios = escala ? PASSAPORTE_HORARIOS.filter((item) => item.startsWith(escala + ' - ')) : PASSAPORTE_HORARIOS;
+  lista.innerHTML = horarios.map((item) => `<option value="${item}"></option>`).join('');
+}
+function renderEscalasPassaporte() {
+  const sel = $('p_escala');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">Selecione...</option>' + PASSAPORTE_ESCALAS.map((escala) => `<option>${escala}</option>`).join('');
+}
 
 // ---- VALIDACAO ----
 function limparErro(el) { el.classList.remove('error'); const e = $('err-' + el.id); if (e) e.classList.remove('show'); }
@@ -220,7 +308,13 @@ const App = {
     document.querySelectorAll('#oncareTipos .choice-btn').forEach((b) => b.classList.toggle('active', b.dataset.v === tipo));
   },
 
-  hoje(id) { const d = new Date(); $(id).value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; },
+  dias(id, offset = 0) {
+    const d = new Date();
+    d.setDate(d.getDate() + offset);
+    $(id).value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    limparErro($(id));
+  },
+  hoje(id) { this.dias(id, 0); },
 
   // ---- GERAR CARTA ----
   async gerarCarta() {
@@ -265,7 +359,8 @@ const App = {
         TEL: $('o_tel').value.trim(),
         NASCIMENTO: fmtData($('o_nasc').value),
       };
-      const bytes = await fillOncare(PDFLib, await baseBytes('base_oncare.pdf'), ONCARE, data);
+      const modeloOncare = tipoExame === 'complementar' ? 'base_oncare_complementar.pdf' : 'base_oncare_admissional.pdf';
+      const bytes = await fillOncare(PDFLib, await baseBytes(modeloOncare), ONCARE, data);
       baixar(bytes, `GUIA ONCARE - ${nome}.pdf`);
       toast('Guia OnCare gerada com sucesso.', 'success');
     } catch (err) { console.error(err); toast('Erro ao gerar: ' + err.message, 'error'); }
@@ -317,9 +412,9 @@ const App = {
     try {
       const nome = upper($('p_nome').value);
       const data = {
-        dataInicio: fmtData($('p_data').value), nome: `${$('p_trat').value} ${nome}`,
-        escala: $('p_escala').value, horarioTrabalho: $('p_htrab').value.trim(), tipo: passTipo,
-        horarioApresentacao: $('p_hapres').value.trim(), endereco: upper($('p_endereco').value),
+        dataInicio: fmtData($('p_data').value), nome: `${$('p_trat').value} ${textoPdfPassaporte(nome)}`,
+        escala: $('p_escala').value, horarioTrabalho: textoPdfPassaporte(horarioSemEscala($('p_htrab').value)), tipo: passTipo,
+        horarioApresentacao: textoPdfPassaporte($('p_hapres').value), endereco: textoPdfPassaporte(upper($('p_endereco').value)),
       };
       const bytes = await fillPassaporte(PDFLib, await baseBytes('base_passaporte.pdf'), PASSAPORTE, data);
       baixar(bytes, `PASSAPORTE - ${nome}.pdf`);
@@ -419,6 +514,8 @@ async function init() {
   $('passTipos').innerHTML = [['BASE', '\u{1F3E0}'], ['POSTO', '\u{1F4CD}']].map(([t, ic]) =>
     `<button class="choice-btn" data-v="${t}" onclick="App.selTipo('${t}')"><span class="choice-icon">${ic}</span><span class="choice-name">${t}</span></button>`
   ).join('');
+  renderEscalasPassaporte();
+  renderHorariosPassaporte();
   App.selTipo('BASE');
 
   // mascaras + limpar erro
@@ -428,8 +525,20 @@ async function init() {
   mask('m_salario', mascaraMoedaBRL);
   ['c_nome', 'c_endereco', 'c_cidade', 'c_rg', 'c_data', 'o_local', 'o_unidade', 'o_data', 'o_cargo', 'o_nome', 'o_rg', 'o_nasc', 'p_nome', 'p_data', 'p_escala', 'p_htrab', 'p_endereco', 'p_hapres']
     .forEach((id) => $(id).addEventListener('input', () => limparErro($(id))));
+  $('p_escala').addEventListener('change', () => {
+    renderHorariosPassaporte();
+    limparErro($('p_escala'));
+  });
+  $('p_htrab').addEventListener('input', () => {
+    const escala = escalaDoHorario($('p_htrab').value);
+    if (escala && $('p_escala').value !== escala) {
+      $('p_escala').value = escala;
+      renderHorariosPassaporte();
+      limparErro($('p_escala'));
+    }
+  });
 
-  App.hoje('c_data'); App.hoje('p_data');
+  App.hoje('c_data'); App.dias('o_data', 1); App.dias('p_data', 2);
   App.bloquearCargo();
   App.renderConfig();
 }

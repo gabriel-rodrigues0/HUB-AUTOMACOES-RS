@@ -130,7 +130,7 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
 
   <!-- ===== CARTA ===== -->
   <section class="view hidden" id="view-carta">
-    <button class="back-link" onclick="abrirTela('rs')">← Voltar para R&amp;S</button>
+    <button class="back-link" onclick="abrirTela('rs')"><span class="back-icon">←</span><span>Voltar para R&amp;S</span></button>
     <div class="page-header"><h1 class="page-title">Gerador de Cartas Bancárias</h1><p class="page-desc">Preencha os dados e baixe o PDF oficial.</p></div>
     <div class="card">
       <div class="card-section">
@@ -178,7 +178,7 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
 
   <!-- ===== ONCARE ===== -->
   <section class="view hidden" id="view-oncare">
-    <button class="back-link" onclick="abrirTela('rs')">← Voltar para R&amp;S</button>
+    <button class="back-link" onclick="abrirTela('rs')"><span class="back-icon">←</span><span>Voltar para R&amp;S</span></button>
     <div class="page-header"><h1 class="page-title">Gerador de Guia OnCare</h1><p class="page-desc">Solicitação de agendamento de exame admissional ou complementar.</p></div>
     <div class="card">
       <div class="card-section">
@@ -194,8 +194,8 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
         <div class="form-grid">
           <div class="field"><label for="o_local">Local de agendamento<span class="req">*</span></label><input type="text" id="o_local" placeholder="SANTO AMARO" autocomplete="off"/><span class="field-error" id="err-o_local">Campo obrigatório.</span></div>
           <div class="field"><label for="o_unidade">Unidade / Posto<span class="req">*</span></label><input type="text" id="o_unidade" placeholder="DOMANI BROOKLIN" autocomplete="off"/><span class="field-error" id="err-o_unidade">Campo obrigatório.</span></div>
-          <div class="field"><label for="o_data">Data do exame<span class="req">*</span></label><div class="date-row"><input type="date" id="o_data"/><button type="button" class="date-today-btn" onclick="App.hoje('o_data')">Hoje</button></div></div>
-          <div class="field"><label for="o_cargo">Cargo<span class="req">*</span></label><input type="text" id="o_cargo" placeholder="PORTEIRO" autocomplete="off"/><span class="field-error" id="err-o_cargo">Campo obrigatório.</span></div>
+          <div class="field"><label for="o_data">Data do exame<span class="req">*</span></label><div class="date-row"><input type="date" id="o_data"/><button type="button" class="date-today-btn" onclick="App.dias('o_data', 1)">Amanhã</button></div></div>
+          <div class="field"><label for="o_cargo">Cargo<span class="req">*</span></label><input type="text" id="o_cargo" placeholder="AUXILIAR DE MANUTENÇÃO" autocomplete="off"/><span class="field-error" id="err-o_cargo">Campo obrigatório.</span></div>
           <div class="field full-width"><label for="o_nome">Nome completo<span class="req">*</span></label><input type="text" id="o_nome" placeholder="JOÃO DA SILVA SANTOS" autocomplete="off"/><span class="field-error" id="err-o_nome">Campo obrigatório.</span></div>
           <div class="field"><label for="o_rg">RG<span class="req">*</span></label><input type="text" id="o_rg" placeholder="12.345.678-9" autocomplete="off"/><span class="field-error" id="err-o_rg">Campo obrigatório.</span></div>
           <div class="field"><label for="o_cpf">CPF<span class="req">*</span></label><input type="text" id="o_cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="off"/><span class="field-error" id="err-o_cpf">CPF inválido.</span></div>
@@ -214,7 +214,7 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
 
   <!-- ===== PASSAPORTE ===== -->
   <section class="view hidden" id="view-passaporte">
-    <button class="back-link" onclick="abrirTela('rs')">← Voltar para R&amp;S</button>
+    <button class="back-link" onclick="abrirTela('rs')"><span class="back-icon">←</span><span>Voltar para R&amp;S</span></button>
     <div class="page-header"><h1 class="page-title">Gerador de Passaporte</h1><p class="page-desc">Carta de boas-vindas com data, local e escala.</p></div>
     <div class="card">
       <div class="card-section">
@@ -225,12 +225,12 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
         <div class="section-label"><div class="section-label-num">2</div><div class="section-label-text">Dados</div></div>
         <div class="form-grid">
           <div class="field"><label for="p_trat">Tratamento</label><select id="p_trat"><option>Sr.</option><option>Sra.</option></select></div>
-          <div class="field"><label for="p_data">Data de início<span class="req">*</span></label><div class="date-row"><input type="date" id="p_data"/><button type="button" class="date-today-btn" onclick="App.hoje('p_data')">Hoje</button></div></div>
+          <div class="field"><label for="p_data">Data de início<span class="req">*</span></label><div class="date-row"><input type="date" id="p_data"/><button type="button" class="date-today-btn" onclick="App.dias('p_data', 2)">+2 dias</button></div></div>
           <div class="field full-width"><label for="p_nome">Nome completo<span class="req">*</span></label><input type="text" id="p_nome" placeholder="JOÃO DA SILVA" autocomplete="off"/><span class="field-error" id="err-p_nome">Campo obrigatório.</span></div>
           <div class="field full-width"><label for="p_endereco">Endereço de apresentação<span class="req">*</span></label><input type="text" id="p_endereco" autocomplete="off"/><span class="field-hint" id="p_endHint"></span><span class="field-error" id="err-p_endereco">Campo obrigatório.</span></div>
           <div class="field"><label for="p_hapres">Horário de apresentação<span class="req">*</span></label><input type="text" id="p_hapres" placeholder="07:00" autocomplete="off"/><span class="field-error" id="err-p_hapres">Campo obrigatório.</span></div>
-          <div class="field"><label for="p_escala">Escala<span class="req">*</span></label><select id="p_escala"><option value="">Selecione…</option><option>12X36</option><option>6X1</option><option>5X2</option><option>5X1</option><option>4X2</option><option>4X1</option></select><span class="field-error" id="err-p_escala">Selecione a escala.</span></div>
-          <div class="field full-width"><label for="p_htrab">Horário de trabalho<span class="req">*</span></label><input type="text" id="p_htrab" placeholder="07:00 ÀS 15:20" autocomplete="off"/><span class="field-error" id="err-p_htrab">Campo obrigatório.</span></div>
+          <div class="field"><label for="p_escala">Escala<span class="req">*</span></label><select id="p_escala"></select><span class="field-error" id="err-p_escala">Selecione a escala.</span></div>
+          <div class="field full-width"><label for="p_htrab">Horário de trabalho<span class="req">*</span></label><input type="text" id="p_htrab" placeholder="Digite ou selecione um horário" list="p_htrab_options" autocomplete="off"/><datalist id="p_htrab_options"></datalist><span class="field-hint">Digite para filtrar os horários cadastrados. Também aceita horário manual.</span><span class="field-error" id="err-p_htrab">Campo obrigatório.</span></div>
         </div>
       </div>
       <div class="actions-section">
