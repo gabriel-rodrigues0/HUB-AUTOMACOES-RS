@@ -275,6 +275,7 @@ function atualizarCustomSelect(id) {
   const sel = $(id), input = $(id + '_input');
   if (!sel || !input) return;
   const opcao = sel.selectedOptions && sel.selectedOptions[0];
+  if (customSelectState[id]) customSelectState[id].query = '';
   input.value = opcao && sel.value ? opcao.textContent : '';
   input.disabled = sel.disabled;
 }
@@ -282,17 +283,19 @@ function renderCustomSelect(id) {
   const sel = $(id), input = $(id + '_input'), lista = $(id + '_options');
   const state = customSelectState[id] || {};
   if (!sel || !input || !lista) return;
-  const termo = semAcentos(input.value).toUpperCase().replace(/\s+/g, ' ').trim();
+  const termo = state.query || '';
   let opcoes = Array.from(sel.options)
     .filter((opcao) => opcao.value)
     .map((opcao) => ({ value: opcao.value, label: opcao.textContent }));
-  if (state.filterable && !input.readOnly && termo) {
+  if (state.filterable && termo) {
     opcoes = opcoes.filter((opcao) => semAcentos(opcao.label).toUpperCase().includes(termo));
   }
-  lista.innerHTML = opcoes.map((opcao) =>
-    `<button class="suggestion-item${opcao.value === sel.value ? ' active' : ''}" type="button" role="option" data-v="${optionHtml(opcao.value)}">${optionHtml(opcao.label)}</button>`
-  ).join('');
-  lista.classList.toggle('hidden', !state.aberto || sel.disabled || !opcoes.length);
+  lista.innerHTML = opcoes.length
+    ? opcoes.map((opcao) =>
+      `<button class="suggestion-item${opcao.value === sel.value ? ' active' : ''}" type="button" role="option" data-v="${optionHtml(opcao.value)}">${optionHtml(opcao.label)}</button>`
+    ).join('')
+    : '<div class="suggestion-empty">Nenhuma opção encontrada</div>';
+  lista.classList.toggle('hidden', !state.aberto || sel.disabled);
 }
 function fecharCustomSelects(exceto = '') {
   Object.keys(customSelectState).forEach((id) => {
@@ -307,6 +310,7 @@ function selecionarCustomSelect(id, valor) {
   if (!sel) return;
   sel.value = valor;
   customSelectState[id].aberto = false;
+  customSelectState[id].query = '';
   atualizarCustomSelect(id);
   renderCustomSelect(id);
   sel.dispatchEvent(new Event('change', { bubbles: true }));
@@ -315,11 +319,12 @@ function selecionarCustomSelect(id, valor) {
 function setupCustomSelect(id, opts = {}) {
   const sel = $(id), input = $(id + '_input'), lista = $(id + '_options');
   if (!sel || !input || !lista) return;
-  customSelectState[id] = { aberto: false, filterable: !!opts.filterable };
+  customSelectState[id] = { aberto: false, filterable: !!opts.filterable, query: '' };
   const abrir = () => {
     if (sel.disabled || input.disabled) return;
     fecharCustomSelects(id);
     customSelectState[id].aberto = true;
+    customSelectState[id].query = '';
     renderCustomSelect(id);
   };
   input.addEventListener('focus', abrir);
@@ -330,7 +335,24 @@ function setupCustomSelect(id, opts = {}) {
       sel.value = '';
       if (id === 'c_cargo' && $('c_salario')) $('c_salario').value = '';
       customSelectState[id].aberto = true;
+      customSelectState[id].query = semAcentos(input.value).toUpperCase().replace(/\s+/g, ' ').trim();
       renderCustomSelect(id);
+    }
+  });
+  input.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      customSelectState[id].aberto = false;
+      customSelectState[id].query = '';
+      atualizarCustomSelect(id);
+      renderCustomSelect(id);
+      input.blur();
+      return;
+    }
+    if (event.key === 'Enter' && customSelectState[id].aberto) {
+      const primeiro = lista.querySelector('.suggestion-item');
+      if (!primeiro) return;
+      event.preventDefault();
+      selecionarCustomSelect(id, primeiro.dataset.v);
     }
   });
   sel.addEventListener('change', () => {
