@@ -95,6 +95,7 @@ const PASSAPORTE_ESCALAS = [...new Set(PASSAPORTE_HORARIOS.map((item) => item.sp
 // ---- ESTADO ----
 let CARTAS = {}, ONCARE = {}, PASSAPORTE = {};
 let cartaEmpresa = null, oncareEmpresa = null, passTipo = 'BASE', tipoExame = 'admissional', horariosAbertos = false;
+const customSelectState = {};
 
 // ---- UTIL ----
 const $ = (id) => document.getElementById(id);
@@ -265,11 +266,90 @@ function renderEscalasPassaporte() {
   const sel = $('p_escala');
   if (!sel) return;
   sel.innerHTML = '<option value="">Selecione...</option>' + PASSAPORTE_ESCALAS.map((escala) => `<option>${escala}</option>`).join('');
+  atualizarCustomSelect('p_escala');
+}
+function optionHtml(valor) {
+  return String(valor || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function atualizarCustomSelect(id) {
+  const sel = $(id), input = $(id + '_input');
+  if (!sel || !input) return;
+  const opcao = sel.selectedOptions && sel.selectedOptions[0];
+  input.value = opcao && sel.value ? opcao.textContent : '';
+  input.disabled = sel.disabled;
+}
+function renderCustomSelect(id) {
+  const sel = $(id), input = $(id + '_input'), lista = $(id + '_options');
+  const state = customSelectState[id] || {};
+  if (!sel || !input || !lista) return;
+  const termo = semAcentos(input.value).toUpperCase().replace(/\s+/g, ' ').trim();
+  let opcoes = Array.from(sel.options)
+    .filter((opcao) => opcao.value)
+    .map((opcao) => ({ value: opcao.value, label: opcao.textContent }));
+  if (state.filterable && !input.readOnly && termo) {
+    opcoes = opcoes.filter((opcao) => semAcentos(opcao.label).toUpperCase().includes(termo));
+  }
+  lista.innerHTML = opcoes.map((opcao) =>
+    `<button class="suggestion-item${opcao.value === sel.value ? ' active' : ''}" type="button" role="option" data-v="${optionHtml(opcao.value)}">${optionHtml(opcao.label)}</button>`
+  ).join('');
+  lista.classList.toggle('hidden', !state.aberto || sel.disabled || !opcoes.length);
+}
+function fecharCustomSelects(exceto = '') {
+  Object.keys(customSelectState).forEach((id) => {
+    if (id === exceto) return;
+    customSelectState[id].aberto = false;
+    atualizarCustomSelect(id);
+    renderCustomSelect(id);
+  });
+}
+function selecionarCustomSelect(id, valor) {
+  const sel = $(id);
+  if (!sel) return;
+  sel.value = valor;
+  customSelectState[id].aberto = false;
+  atualizarCustomSelect(id);
+  renderCustomSelect(id);
+  sel.dispatchEvent(new Event('change', { bubbles: true }));
+  limparErro(sel);
+}
+function setupCustomSelect(id, opts = {}) {
+  const sel = $(id), input = $(id + '_input'), lista = $(id + '_options');
+  if (!sel || !input || !lista) return;
+  customSelectState[id] = { aberto: false, filterable: !!opts.filterable };
+  const abrir = () => {
+    if (sel.disabled || input.disabled) return;
+    fecharCustomSelects(id);
+    customSelectState[id].aberto = true;
+    renderCustomSelect(id);
+  };
+  input.addEventListener('focus', abrir);
+  input.addEventListener('click', abrir);
+  input.addEventListener('input', () => {
+    forcarCaps(input);
+    if (customSelectState[id].filterable) {
+      sel.value = '';
+      if (id === 'c_cargo' && $('c_salario')) $('c_salario').value = '';
+      customSelectState[id].aberto = true;
+      renderCustomSelect(id);
+    }
+  });
+  sel.addEventListener('change', () => {
+    atualizarCustomSelect(id);
+    renderCustomSelect(id);
+    limparErro(sel);
+  });
+  lista.addEventListener('mousedown', (event) => {
+    const item = event.target.closest('.suggestion-item');
+    if (!item) return;
+    event.preventDefault();
+    selecionarCustomSelect(id, item.dataset.v);
+  });
+  atualizarCustomSelect(id);
 }
 
 // ---- VALIDACAO ----
-function limparErro(el) { el.classList.remove('error'); const e = $('err-' + el.id); if (e) e.classList.remove('show'); }
-function erro(id) { const el = $(id); el.classList.add('error'); const e = $('err-' + id); if (e) e.classList.add('show'); }
+function limparErro(el) { el.classList.remove('error'); const proxy = $(el.id + '_input'); if (proxy) proxy.classList.remove('error'); const e = $('err-' + el.id); if (e) e.classList.remove('show'); }
+function erro(id) { const el = $(id); el.classList.add('error'); const proxy = $(id + '_input'); if (proxy) proxy.classList.add('error'); const e = $('err-' + id); if (e) e.classList.add('show'); }
 function validar(ids) {
   let ok = true;
   for (const id of ids) { const el = $(id); if (!el.value.trim()) { erro(id); ok = false; } }
@@ -312,6 +392,8 @@ const App = {
   preencherCargos(empresa) {
     const sel = $('c_cargo'); const lista = getCargos()[empresa] || [];
     sel.disabled = false;
+    $('c_cargo_input').disabled = false;
+    $('c_cargo_input').placeholder = 'Digite ou selecione um cargo';
     $('c_addCargo').disabled = false;
     $('c_addCargo').title = 'Cadastrar novo cargo';
     $('c_cargoHint').textContent = 'O salario e preenchido automaticamente.';
@@ -319,6 +401,8 @@ const App = {
     const padrao = EMPRESAS[empresa] && EMPRESAS[empresa].cargoPadrao;
     if (padrao && lista.some((c) => c.cargo === padrao)) sel.value = padrao;
     else if (lista[0]) sel.value = lista[0].cargo;
+    atualizarCustomSelect('c_cargo');
+    renderCustomSelect('c_cargo');
     this.onCargoChange();
   },
   onCargoChange() { const o = $('c_cargo').selectedOptions[0]; $('c_salario').value = o ? (o.dataset.sal || '') : ''; },
@@ -327,6 +411,10 @@ const App = {
     $('c_cargo').innerHTML = '<option value="">Selecione a empresa primeiro</option>';
     $('c_cargo').value = '';
     $('c_cargo').disabled = true;
+    $('c_cargo_input').value = '';
+    $('c_cargo_input').placeholder = 'Selecione a empresa primeiro';
+    $('c_cargo_input').disabled = true;
+    renderCustomSelect('c_cargo');
     $('c_addCargo').disabled = true;
     $('c_addCargo').title = 'Selecione uma empresa antes de cadastrar cargo';
     $('c_salario').value = '';
@@ -382,12 +470,8 @@ const App = {
   },
   async copiarMensagemCarta() {
     const texto = [
-      'Olá!',
-      '',
       'Segue a carta para abertura da conta salário.',
       'Basta imprimir e comparecer na agência mais próxima.',
-      '',
-      'Qualquer dúvida, fico à disposição.',
     ].join('\n');
     await copiarTexto(texto);
     toast('Mensagem da carta copiada.', 'success');
@@ -483,6 +567,8 @@ const App = {
     if (!cartaEmpresa) return toast('Selecione uma empresa antes de cadastrar cargo.', 'info');
     const sel = $('m_empresa'); sel.innerHTML = Object.keys(EMPRESAS).map((e) => `<option>${e}</option>`).join('');
     if (cartaEmpresa) sel.value = cartaEmpresa;
+    atualizarCustomSelect('m_empresa');
+    renderCustomSelect('m_empresa');
     $('m_cargo').value = ''; $('m_salario').value = '';
     $('cargoModal').classList.add('show');
   },
@@ -494,7 +580,7 @@ const App = {
     if (all[empresa].some((c) => c.cargo === cargo)) return toast('Cargo ja cadastrado nesta empresa.', 'error');
     all[empresa].push({ cargo, salario }); setCargos(all);
     this.fecharCargoModal();
-    if (cartaEmpresa === empresa) { this.preencherCargos(empresa); $('c_cargo').value = cargo; this.onCargoChange(); }
+    if (cartaEmpresa === empresa) { this.preencherCargos(empresa); $('c_cargo').value = cargo; atualizarCustomSelect('c_cargo'); this.onCargoChange(); }
     this.renderConfig();
     toast(`Cargo "${cargo}" cadastrado em ${empresa}.`, 'success');
   },
@@ -532,7 +618,7 @@ const App = {
     (map[tool] || []).forEach((id) => { const el = $(id); el.value = ''; limparErro(el); });
     if (tool === 'carta') { $('c_cidade').value = 'SÃO PAULO - SP'; this.bloquearCargo(); document.querySelectorAll('#cartaEmpresas .choice-btn').forEach((b) => b.classList.remove('active')); $('cartaInfo').classList.remove('show'); }
     if (tool === 'oncare') { this.selTipoExame('admissional'); document.querySelectorAll('#oncareEmpresas .choice-btn').forEach((b) => b.classList.remove('active')); oncareEmpresa = null; }
-    if (tool === 'passaporte') { $('p_escala').value = ''; $('p_hapres').value = ''; horariosAbertos = false; renderHorariosPassaporte(); this.selTipo('BASE'); }
+    if (tool === 'passaporte') { $('p_escala').value = ''; atualizarCustomSelect('p_escala'); $('p_hapres').value = ''; horariosAbertos = false; renderHorariosPassaporte(); this.selTipo('BASE'); }
     toast('Formulario limpo.', 'info');
   },
 };
@@ -570,6 +656,10 @@ async function init() {
     `<button class="choice-btn" data-v="${t}" onclick="App.selTipo('${t}')"><span class="choice-icon">${ic}</span><span class="choice-name">${t}</span></button>`
   ).join('');
   renderEscalasPassaporte();
+  setupCustomSelect('c_cargo', { filterable: true });
+  setupCustomSelect('p_trat');
+  setupCustomSelect('p_escala');
+  setupCustomSelect('m_empresa');
   renderHorariosPassaporte();
   App.selTipo('BASE');
 
@@ -598,6 +688,7 @@ async function init() {
     const escala = escalaDoHorario($('p_htrab').value);
     if (escala && $('p_escala').value !== escala) {
       $('p_escala').value = escala;
+      atualizarCustomSelect('p_escala');
       limparErro($('p_escala'));
     }
     atualizarHorarioApresentacao();
@@ -616,6 +707,7 @@ async function init() {
   });
   document.addEventListener('mousedown', (event) => {
     if (event.target.closest('.autocomplete-field')) return;
+    fecharCustomSelects();
     horariosAbertos = false;
     renderHorariosPassaporte();
   });

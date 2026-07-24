@@ -150,9 +150,14 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
           <div class="field full-width">
             <label for="c_cargo">Cargo<span class="req">*</span></label>
             <div class="cargo-row">
-              <select id="c_cargo" onchange="App.onCargoChange()" disabled>
-                <option value="">Selecione a empresa primeiro</option>
-              </select>
+              <div class="custom-select-field autocomplete-field">
+                <input type="text" id="c_cargo_input" placeholder="Selecione a empresa primeiro" autocomplete="off" disabled/>
+                <span class="select-arrow">▼</span>
+                <div class="suggestions hidden" id="c_cargo_options" role="listbox"></div>
+                <select id="c_cargo" onchange="App.onCargoChange()" disabled class="hidden-select">
+                  <option value="">Selecione a empresa primeiro</option>
+                </select>
+              </div>
               <button class="btn-add" id="c_addCargo" type="button" title="Selecione uma empresa antes de cadastrar cargo" onclick="App.abrirCargoModal()" disabled>+</button>
             </div>
             <span class="field-hint" id="c_cargoHint">Selecione uma empresa para liberar os cargos.</span>
@@ -225,12 +230,12 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
       <div class="card-section">
         <div class="section-label"><div class="section-label-num">2</div><div class="section-label-text">Dados</div></div>
         <div class="form-grid">
-          <div class="field"><label for="p_trat">Tratamento</label><select id="p_trat"><option>Sr.</option><option>Sra.</option></select></div>
+          <div class="field custom-select-field autocomplete-field"><label for="p_trat_input">Tratamento</label><input type="text" id="p_trat_input" autocomplete="off" readonly/><span class="select-arrow">▼</span><div class="suggestions hidden" id="p_trat_options" role="listbox"></div><select id="p_trat" class="hidden-select"><option>Sr.</option><option>Sra.</option></select></div>
           <div class="field"><label for="p_data">Data de início<span class="req">*</span></label><div class="date-row"><input type="date" id="p_data"/><button type="button" class="date-today-btn" onclick="App.dias('p_data', 2)">+2 dias</button></div></div>
           <div class="field full-width"><label for="p_nome">Nome completo<span class="req">*</span></label><input type="text" id="p_nome" placeholder="JOÃO DA SILVA" autocomplete="off"/><span class="field-error" id="err-p_nome">Campo obrigatório.</span></div>
           <div class="field full-width"><label for="p_endereco">Endereço de apresentação<span class="req">*</span></label><input type="text" id="p_endereco" autocomplete="off"/><span class="field-hint" id="p_endHint"></span><span class="field-error" id="err-p_endereco">Campo obrigatório.</span></div>
           <div class="field"><label for="p_hapres">Horário de apresentação<span class="req">*</span></label><input type="text" id="p_hapres" placeholder="07:00" autocomplete="off"/><span class="field-error" id="err-p_hapres">Campo obrigatório.</span></div>
-          <div class="field"><label for="p_escala">Escala<span class="req">*</span></label><select id="p_escala"></select><span class="field-error" id="err-p_escala">Selecione a escala.</span></div>
+          <div class="field custom-select-field autocomplete-field"><label for="p_escala_input">Escala<span class="req">*</span></label><input type="text" id="p_escala_input" placeholder="Selecione a escala" autocomplete="off" readonly/><span class="select-arrow">▼</span><div class="suggestions hidden" id="p_escala_options" role="listbox"></div><select id="p_escala" class="hidden-select"></select><span class="field-error" id="err-p_escala">Selecione a escala.</span></div>
           <div class="field full-width autocomplete-field"><label for="p_htrab">Horário de trabalho<span class="req">*</span></label><input type="text" id="p_htrab" placeholder="Digite ou selecione um horário" autocomplete="off"/><div class="suggestions hidden" id="p_htrab_options" role="listbox"></div><span class="field-hint">Digite para filtrar os horários cadastrados. Também aceita horário manual.</span><span class="field-error" id="err-p_htrab">Campo obrigatório.</span></div>
         </div>
       </div>
@@ -265,7 +270,7 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
   <div class="modal">
     <div class="modal-head">Cadastrar novo cargo</div>
     <div class="modal-body">
-      <div class="field"><label for="m_empresa">Empresa</label><select id="m_empresa"></select></div>
+      <div class="field custom-select-field autocomplete-field"><label for="m_empresa_input">Empresa</label><input type="text" id="m_empresa_input" autocomplete="off" readonly/><span class="select-arrow">▼</span><div class="suggestions hidden" id="m_empresa_options" role="listbox"></div><select id="m_empresa" class="hidden-select"></select></div>
       <div class="field"><label for="m_cargo">Cargo</label><input type="text" id="m_cargo" placeholder="RECEPCIONISTA" autocomplete="off"/></div>
       <div class="field"><label for="m_salario">Salário</label><input type="text" id="m_salario" placeholder="R$ 0,00" inputmode="numeric" autocomplete="off"/></div>
     </div>
