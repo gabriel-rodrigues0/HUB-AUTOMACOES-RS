@@ -6,29 +6,34 @@
   },
   "fields": {
     "EMPRESA": {
-      "x": 140,
+      "x": 347.5,
       "y": 594.0,
-      "size": 10
+      "size": 10,
+      "align": "center"
     },
     "LOCAL": {
-      "x": 140,
+      "x": 347.5,
       "y": 458.5,
-      "size": 10
+      "size": 10,
+      "align": "center"
     },
     "DATA_EXAME": {
-      "x": 140,
+      "x": 347.5,
       "y": 404.0,
-      "size": 10
+      "size": 10,
+      "align": "center"
     },
     "UNIDADE": {
-      "x": 140,
+      "x": 347.5,
       "y": 382.0,
-      "size": 10
+      "size": 10,
+      "align": "center"
     },
     "SETOR": {
-      "x": 140,
+      "x": 347.5,
       "y": 360.0,
-      "size": 10
+      "size": 10,
+      "align": "center"
     },
     "CARGO": {
       "x": 140,

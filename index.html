@@ -163,10 +163,10 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
           </div>
           <div class="field full-width"><label for="c_nome">Nome completo<span class="req">*</span></label><input type="text" id="c_nome" placeholder="JOÃO DA SILVA SANTOS" autocomplete="off"/><span class="field-error" id="err-c_nome">Campo obrigatório.</span></div>
           <div class="field full-width"><label for="c_endereco">Endereço<span class="req">*</span></label><input type="text" id="c_endereco" placeholder="RUA DAS FLORES, 123 - JARDIM PAULISTA" autocomplete="off"/><span class="field-error" id="err-c_endereco">Campo obrigatório.</span></div>
-          <div class="field"><label for="c_cep">CEP<span class="req">*</span></label><input type="text" id="c_cep" placeholder="00000-000" maxlength="9" autocomplete="off"/><span class="field-error" id="err-c_cep">CEP inválido.</span></div>
+          <div class="field"><label for="c_cep">CEP<span class="req">*</span></label><input type="text" id="c_cep" placeholder="00000-000" maxlength="9" autocomplete="off"/><span class="field-error" id="err-c_cep">Campo obrigatório.</span></div>
           <div class="field"><label for="c_cidade">Cidade<span class="req">*</span></label><input type="text" id="c_cidade" value="SÃO PAULO - SP" autocomplete="off"/><span class="field-hint">Preenchido automaticamente, mas pode ser alterado.</span><span class="field-error" id="err-c_cidade">Campo obrigatório.</span></div>
-          <div class="field"><label for="c_rg">RG<span class="req">*</span></label><input type="text" id="c_rg" placeholder="12.345.678-9" autocomplete="off"/><span class="field-error" id="err-c_rg">Campo obrigatório.</span></div>
-          <div class="field"><label for="c_cpf">CPF<span class="req">*</span></label><input type="text" id="c_cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="off"/><span class="field-error" id="err-c_cpf">CPF inválido.</span></div>
+          <div class="field"><label for="c_rg">RG<span class="req">*</span></label><input type="text" id="c_rg" placeholder="12.345.678-9" maxlength="12" autocomplete="off"/><span class="field-error" id="err-c_rg">Campo obrigatório.</span></div>
+          <div class="field"><label for="c_cpf">CPF<span class="req">*</span></label><input type="text" id="c_cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="off"/><span class="field-error" id="err-c_cpf">Campo obrigatório.</span></div>
         </div>
       </div>
       <div class="actions-section">
@@ -197,8 +197,8 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
           <div class="field"><label for="o_data">Data do exame<span class="req">*</span></label><div class="date-row"><input type="date" id="o_data"/><button type="button" class="date-today-btn" onclick="App.dias('o_data', 1)">Amanhã</button></div></div>
           <div class="field"><label for="o_cargo">Cargo<span class="req">*</span></label><input type="text" id="o_cargo" placeholder="AUXILIAR DE MANUTENÇÃO" autocomplete="off"/><span class="field-error" id="err-o_cargo">Campo obrigatório.</span></div>
           <div class="field full-width"><label for="o_nome">Nome completo<span class="req">*</span></label><input type="text" id="o_nome" placeholder="JOÃO DA SILVA SANTOS" autocomplete="off"/><span class="field-error" id="err-o_nome">Campo obrigatório.</span></div>
-          <div class="field"><label for="o_rg">RG<span class="req">*</span></label><input type="text" id="o_rg" placeholder="12.345.678-9" autocomplete="off"/><span class="field-error" id="err-o_rg">Campo obrigatório.</span></div>
-          <div class="field"><label for="o_cpf">CPF<span class="req">*</span></label><input type="text" id="o_cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="off"/><span class="field-error" id="err-o_cpf">CPF inválido.</span></div>
+          <div class="field"><label for="o_rg">RG<span class="req">*</span></label><input type="text" id="o_rg" placeholder="12.345.678-9" maxlength="12" autocomplete="off"/><span class="field-error" id="err-o_rg">Campo obrigatório.</span></div>
+          <div class="field"><label for="o_cpf">CPF<span class="req">*</span></label><input type="text" id="o_cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="off"/><span class="field-error" id="err-o_cpf">Campo obrigatório.</span></div>
           <div class="field"><label for="o_tel">Telefone<span class="req">*</span></label><input type="text" id="o_tel" placeholder="(11) 90000-0000" maxlength="15" autocomplete="off"/><span class="field-error" id="err-o_tel">Campo obrigatório.</span></div>
           <div class="field"><label for="o_nasc">Data de nascimento<span class="req">*</span></label><input type="date" id="o_nasc"/><span class="field-error" id="err-o_nasc">Campo obrigatório.</span></div>
         </div>
@@ -230,7 +230,7 @@ document.getElementById('gatePass').addEventListener('keydown', function (event)
           <div class="field full-width"><label for="p_endereco">Endereço de apresentação<span class="req">*</span></label><input type="text" id="p_endereco" autocomplete="off"/><span class="field-hint" id="p_endHint"></span><span class="field-error" id="err-p_endereco">Campo obrigatório.</span></div>
           <div class="field"><label for="p_hapres">Horário de apresentação<span class="req">*</span></label><input type="text" id="p_hapres" placeholder="07:00" autocomplete="off"/><span class="field-error" id="err-p_hapres">Campo obrigatório.</span></div>
           <div class="field"><label for="p_escala">Escala<span class="req">*</span></label><select id="p_escala"></select><span class="field-error" id="err-p_escala">Selecione a escala.</span></div>
-          <div class="field full-width"><label for="p_htrab">Horário de trabalho<span class="req">*</span></label><input type="text" id="p_htrab" placeholder="Digite ou selecione um horário" list="p_htrab_options" autocomplete="off"/><datalist id="p_htrab_options"></datalist><span class="field-hint">Digite para filtrar os horários cadastrados. Também aceita horário manual.</span><span class="field-error" id="err-p_htrab">Campo obrigatório.</span></div>
+          <div class="field full-width autocomplete-field"><label for="p_htrab">Horário de trabalho<span class="req">*</span></label><input type="text" id="p_htrab" placeholder="Digite ou selecione um horário" autocomplete="off"/><div class="suggestions hidden" id="p_htrab_options" role="listbox"></div><span class="field-hint">Digite para filtrar os horários cadastrados. Também aceita horário manual.</span><span class="field-error" id="err-p_htrab">Campo obrigatório.</span></div>
         </div>
       </div>
       <div class="actions-section">
