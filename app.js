@@ -32,7 +32,7 @@ const DEFAULT_CARGOS = {
     { cargo: 'VSPP', salario: 'R$ 3.848,75' },
   ],
 };
-const BASE_ENDERECO = 'Rua Ibirapora, 100 - Jardim Londrina';
+const BASE_ENDERECO = 'RUA IBIRAPORA, 100 - JARDIM LONDRINA';
 const TIPO_EXAMES = {
   admissional: { label: 'Admissional', icon: 'AD' },
   complementar: { label: 'Complementar', icon: 'CP' },
@@ -214,6 +214,31 @@ function horarioSemEscala(valor) {
   if (!escala) return (valor || '').trim();
   return (valor || '').trim().replace(new RegExp('^' + escala + '\\s*-?\\s*', 'i'), '').trim();
 }
+function horaEntradaHorario(valor) {
+  const texto = horarioSemEscala(valor).trim().toUpperCase();
+  if (texto.includes('FOLGUISTA')) return '';
+  const match = texto.match(/\b(\d{1,2})(?::?(\d{2}))?\b/);
+  if (!match) return '';
+  return `${String(match[1]).padStart(2, '0')}:${match[2] || '00'}`;
+}
+function atualizarHorarioApresentacao() {
+  const h = $('p_hapres');
+  if (!h) return;
+  if (passTipo === 'BASE') {
+    h.value = '07:00';
+  } else {
+    h.value = horaEntradaHorario($('p_htrab').value);
+  }
+  h.readOnly = true;
+}
+function forcarCaps(el) {
+  if (!el || typeof el.value !== 'string') return;
+  const ini = el.selectionStart, fim = el.selectionEnd;
+  const novo = el.value.toUpperCase();
+  if (el.value === novo) return;
+  el.value = novo;
+  try { el.setSelectionRange(ini, fim); } catch {}
+}
 function textoPdfPassaporte(valor) {
   return semAcentos(valor).replace(/\bA\s+S\b/g, 'AS').replace(/[?�]S/g, 'AS').replace(/\s+/g, ' ').trim();
 }
@@ -317,9 +342,10 @@ const App = {
       end.value = BASE_ENDERECO; end.readOnly = true; h.value = '07:00'; h.readOnly = true;
       hint.textContent = 'Apresentacao direto na BASE (preenchido automaticamente).';
     } else {
-      if (end.readOnly) { end.value = ''; h.value = ''; }
-      end.readOnly = false; h.readOnly = false;
-      hint.textContent = 'Apresentacao direto no POSTO (preencha endereco e horario).';
+      if (end.readOnly) end.value = '';
+      end.readOnly = false; h.readOnly = true;
+      atualizarHorarioApresentacao();
+      hint.textContent = 'Apresentacao direto no POSTO; horario acompanha a entrada.';
     }
     limparErro(end); limparErro(h);
   },
@@ -353,6 +379,18 @@ const App = {
       toast('Carta gerada com sucesso.', 'success');
     } catch (err) { console.error(err); toast('Erro ao gerar: ' + err.message, 'error'); }
     finally { btn.classList.remove('loading'); btn.disabled = false; }
+  },
+  async copiarMensagemCarta() {
+    const texto = [
+      'Olá!',
+      '',
+      'Segue a carta para abertura da conta salário.',
+      'Basta imprimir e comparecer na agência mais próxima.',
+      '',
+      'Qualquer dúvida, fico à disposição.',
+    ].join('\n');
+    await copiarTexto(texto);
+    toast('Mensagem da carta copiada.', 'success');
   },
 
   // ---- GERAR ONCARE ----
@@ -494,7 +532,7 @@ const App = {
     (map[tool] || []).forEach((id) => { const el = $(id); el.value = ''; limparErro(el); });
     if (tool === 'carta') { $('c_cidade').value = 'SÃO PAULO - SP'; this.bloquearCargo(); document.querySelectorAll('#cartaEmpresas .choice-btn').forEach((b) => b.classList.remove('active')); $('cartaInfo').classList.remove('show'); }
     if (tool === 'oncare') { this.selTipoExame('admissional'); document.querySelectorAll('#oncareEmpresas .choice-btn').forEach((b) => b.classList.remove('active')); oncareEmpresa = null; }
-    if (tool === 'passaporte') { $('p_escala').value = ''; horariosAbertos = false; renderHorariosPassaporte(); this.selTipo('BASE'); }
+    if (tool === 'passaporte') { $('p_escala').value = ''; $('p_hapres').value = ''; horariosAbertos = false; renderHorariosPassaporte(); this.selTipo('BASE'); }
     toast('Formulario limpo.', 'info');
   },
 };
@@ -540,10 +578,13 @@ async function init() {
   mask('c_cpf', mascaraCPF); mask('c_cep', mascaraCEP); mask('c_rg', mascaraRG);
   mask('o_cpf', mascaraCPF); mask('o_tel', mascaraTel); mask('o_rg', mascaraRG);
   mask('m_salario', mascaraMoedaBRL);
-  ['c_nome', 'c_endereco', 'c_cidade', 'c_data', 'o_local', 'o_unidade', 'o_data', 'o_cargo', 'o_nome', 'o_nasc', 'p_nome', 'p_data', 'p_escala', 'p_htrab', 'p_endereco', 'p_hapres']
+  ['c_nome', 'c_endereco', 'c_cidade', 'o_local', 'o_unidade', 'o_cargo', 'o_nome', 'p_nome', 'p_htrab', 'p_endereco', 'p_hapres', 'm_cargo']
+    .forEach((id) => $(id).addEventListener('input', () => forcarCaps($(id))));
+  ['c_nome', 'c_endereco', 'c_cidade', 'c_data', 'o_local', 'o_unidade', 'o_data', 'o_cargo', 'o_nome', 'o_nasc', 'p_nome', 'p_data', 'p_escala', 'p_htrab', 'p_endereco', 'p_hapres', 'm_cargo']
     .forEach((id) => $(id).addEventListener('input', () => limparErro($(id))));
   $('p_escala').addEventListener('change', () => {
-    $('p_htrab').value = horarioSemEscala($('p_htrab').value);
+    $('p_htrab').value = '';
+    atualizarHorarioApresentacao();
     horariosAbertos = true;
     renderHorariosPassaporte();
     limparErro($('p_escala'));
@@ -559,6 +600,7 @@ async function init() {
       $('p_escala').value = escala;
       limparErro($('p_escala'));
     }
+    atualizarHorarioApresentacao();
     renderHorariosPassaporte();
   });
   $('p_htrab_options').addEventListener('mousedown', (event) => {
@@ -566,6 +608,7 @@ async function init() {
     if (!item) return;
     event.preventDefault();
     $('p_htrab').value = item.dataset.v;
+    atualizarHorarioApresentacao();
     horariosAbertos = false;
     renderHorariosPassaporte();
     limparErro($('p_htrab'));
