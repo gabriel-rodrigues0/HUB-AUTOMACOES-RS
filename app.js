@@ -221,8 +221,15 @@ function renderHorariosPassaporte() {
   const lista = $('p_htrab_options');
   if (!lista) return;
   const escala = $('p_escala') && $('p_escala').value;
-  const termo = semAcentos($('p_htrab').value).toUpperCase().replace(/\s+/g, ' ').trim();
-  const horarios = (escala ? PASSAPORTE_HORARIOS.filter((item) => item.startsWith(escala + ' - ')) : PASSAPORTE_HORARIOS)
+  if (!escala) {
+    lista.innerHTML = '';
+    lista.classList.add('hidden');
+    return;
+  }
+  const termo = semAcentos(horarioSemEscala($('p_htrab').value)).toUpperCase().replace(/\s+/g, ' ').trim();
+  const horarios = PASSAPORTE_HORARIOS
+    .filter((item) => item.startsWith(escala + ' - '))
+    .map((item) => horarioSemEscala(item))
     .filter((item) => !termo || semAcentos(item).toUpperCase().includes(termo));
   lista.innerHTML = horarios.map((item) =>
     `<button class="suggestion-item" type="button" role="option" data-v="${item.replace(/"/g, '&quot;')}">${item}</button>`
@@ -536,6 +543,8 @@ async function init() {
   ['c_nome', 'c_endereco', 'c_cidade', 'c_data', 'o_local', 'o_unidade', 'o_data', 'o_cargo', 'o_nome', 'o_nasc', 'p_nome', 'p_data', 'p_escala', 'p_htrab', 'p_endereco', 'p_hapres']
     .forEach((id) => $(id).addEventListener('input', () => limparErro($(id))));
   $('p_escala').addEventListener('change', () => {
+    $('p_htrab').value = horarioSemEscala($('p_htrab').value);
+    horariosAbertos = true;
     renderHorariosPassaporte();
     limparErro($('p_escala'));
   });
@@ -557,8 +566,6 @@ async function init() {
     if (!item) return;
     event.preventDefault();
     $('p_htrab').value = item.dataset.v;
-    const escala = escalaDoHorario(item.dataset.v);
-    if (escala) $('p_escala').value = escala;
     horariosAbertos = false;
     renderHorariosPassaporte();
     limparErro($('p_htrab'));
@@ -570,7 +577,6 @@ async function init() {
     renderHorariosPassaporte();
   });
 
-  App.hoje('c_data'); App.dias('o_data', 1); App.dias('p_data', 2);
   App.bloquearCargo();
   App.renderConfig();
 }
